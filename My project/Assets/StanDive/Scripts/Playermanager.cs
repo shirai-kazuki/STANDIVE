@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;
-    private float moveSpeed = 10f;
+    private float moveSpeed = 30f;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
