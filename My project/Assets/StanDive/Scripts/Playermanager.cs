@@ -8,6 +8,8 @@ public class Playermanager : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        //空気抵抗を0.1にする
+        rb.linearDamping = 0.1f; 
     }
     private void FixedUpdate()
     {

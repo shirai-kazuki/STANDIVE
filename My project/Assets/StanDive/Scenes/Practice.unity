@@ -225,7 +225,7 @@ Transform:
   m_GameObject: {fileID: 792967945}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5000, y: 1500, z: 5000}
+  m_LocalPosition: {x: 5000, y: 2000, z: 5000}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5307,7 +5307,7 @@ Transform:
   m_GameObject: {fileID: 1166901038}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5000, y: 1500, z: 5000}
+  m_LocalPosition: {x: 5000, y: 2000, z: 5000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5663,7 +5663,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 1
   m_MinParticleSize: 0
-  m_MaxParticleSize: 800
+  m_MaxParticleSize: 0.9
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -5880,7 +5880,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 0.78039217}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5944,8 +5944,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 800
-      minScalar: 50
+      scalar: 1000
+      minScalar: 100
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -6982,8 +6982,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 12336
-        atime2: 54356
+        atime1: 17155
+        atime2: 49922
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -10422,7 +10422,7 @@ Transform:
   m_GameObject: {fileID: 2143352014}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 5000, y: 1000, z: 5000}
+  m_LocalPosition: {x: 5000, y: 800, z: 5000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
