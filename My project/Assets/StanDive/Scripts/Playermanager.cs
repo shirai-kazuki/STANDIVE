@@ -16,6 +16,18 @@ public class Playermanager : MonoBehaviour
         // キーボードがPCに認識されているか安全のためにチェック
         if (Keyboard.current == null) return;
 
+        // 前
+        if (Keyboard.current.wKey.isPressed)
+        {
+            rb.AddForce(transform.forward * moveSpeed);
+        }
+
+        // 後ろ
+        if (Keyboard.current.sKey.isPressed)
+        {
+            rb.AddForce(-transform.forward * moveSpeed);
+        }
+
         //右に進む
         if (Keyboard.current.dKey.isPressed)
         {
