@@ -18,7 +18,7 @@ public class Playermanager : MonoBehaviour
     {
         MovePlayer();
 
-        if (transform.position.y < height - 1700f)
+        if (transform.position.y < height - 1500f)
         {
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
