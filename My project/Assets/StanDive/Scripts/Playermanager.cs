@@ -22,8 +22,8 @@ public class Playermanager : MonoBehaviour
         {
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
-            //空気抵抗を0.05にする
-            rb.linearDamping = 0.05f;
+            //空気抵抗を0.5にする
+            rb.linearDamping = 0.5f;
         }
     }
 
