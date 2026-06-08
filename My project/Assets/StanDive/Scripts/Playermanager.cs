@@ -5,13 +5,40 @@ public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;
     private float moveSpeed = 30f;
-    void Start()
+    private float height;
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         //空気抵抗を0.1にする
         rb.linearDamping = 0.1f; 
+        //初期の高さを保存
+        height = transform.position.y;
     }
     private void FixedUpdate()
+    {
+        MovePlayer();
+
+        if (transform.position.y < height - 1500f)
+        {
+            // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
+            ActiveChildByName("Parachute");
+            //空気抵抗を0.5にする
+            rb.linearDamping = 0.5f;
+        }
+    }
+
+    //名前を指定して子オブジェクトをアクティブにする関数
+    private void ActiveChildByName(string targetName)
+    {
+        Transform child = transform.Find(targetName);
+        if (!child.gameObject.activeSelf)
+        {
+            child.gameObject.SetActive(true);
+        }
+    }
+
+    // プレイヤーを移動させる関数
+    private void MovePlayer()
     {
         // キーボードがPCに認識されているか安全のためにチェック
         if (Keyboard.current == null) return;
@@ -39,6 +66,7 @@ public class Playermanager : MonoBehaviour
             rb.AddForce(-transform.right * moveSpeed);
         }
     }
+
 
 
 }
