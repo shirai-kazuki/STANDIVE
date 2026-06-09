@@ -22,8 +22,10 @@ public class Playermanager : MonoBehaviour
         {
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
+            // プレイヤーが一定の高さより下に落ちたら、子オブジェクトを非アクティブにする
+            DeactivateChildByName("WindPressure");
             //空気抵抗を0.5にする
-            rb.linearDamping = 0.5f;
+            rb.linearDamping = 0.7f;
         }
     }
 
@@ -33,6 +35,26 @@ public class Playermanager : MonoBehaviour
         Transform child = transform.Find(targetName);
         if (!child.gameObject.activeSelf)
         {
+            child.gameObject.SetActive(true);
+        }
+    }
+
+    //名前を指定して子オブジェクトを非アクティブにする関数
+    private void DeactivateChildByName(string targetName)
+    {
+        Transform child = transform.Find(targetName);
+        if (child.gameObject.activeSelf)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
+
+    // プレイヤーを移動させる関数
+    private void MovePlayer()
+    {
+        // キーボードがPCに認識されているか安全のためにチェック
+        if (Keyboard.current == null) return;
+
             child.gameObject.SetActive(true);
         }
     }
