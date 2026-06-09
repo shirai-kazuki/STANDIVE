@@ -55,16 +55,6 @@ public class Playermanager : MonoBehaviour
         // キーボードがPCに認識されているか安全のためにチェック
         if (Keyboard.current == null) return;
 
-            child.gameObject.SetActive(true);
-        }
-    }
-
-    // プレイヤーを移動させる関数
-    private void MovePlayer()
-    {
-        // キーボードがPCに認識されているか安全のためにチェック
-        if (Keyboard.current == null) return;
-
         // 前
         if (Keyboard.current.wKey.isPressed)
         {
