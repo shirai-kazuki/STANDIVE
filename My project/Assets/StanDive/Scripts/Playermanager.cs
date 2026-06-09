@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;
-    private float moveSpeed = 30f;
+    private float moveSpeed = 15f;
     private float height;
     private void Start()
     {
@@ -18,14 +18,19 @@ public class Playermanager : MonoBehaviour
     {
         MovePlayer();
 
-        if (transform.position.y < height - 1500f)
+        if (transform.position.y < height - 3000f)
         {
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトを非アクティブにする
             DeactivateChildByName("WindPressure");
             //空気抵抗を0.5にする
-            rb.linearDamping = 0.7f;
+            rb.linearDamping = 0.5f;
+        }
+        if (transform.position.y < height - 3200f)
+        {
+            //空気抵抗を1にする
+            rb.linearDamping = 1f;
         }
     }
 
