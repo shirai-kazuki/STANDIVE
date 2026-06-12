@@ -568,8 +568,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1510890444}
   m_SourcePrefab: {fileID: 100100000, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+--- !u!1 &262739365 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+  m_PrefabInstance: {fileID: 262739364}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &373861888
 GameObject:
   m_ObjectHideFlags: 0
@@ -6380,6 +6388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68fc2838d68c00449af56d7627decd34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Playermanager
+  leftHandHeight: 0
+  rightHandHeight: 0
 --- !u!54 &1166901040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7219,6 +7229,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4453513310108136, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
   m_PrefabInstance: {fileID: 262739364}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1510890444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262739365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f42ecf2266c20ed429585b82bd5361cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GetHandHeight
+  handSide: 1
+  playermanager: {fileID: 1166901039}
 --- !u!1 &1524831990
 GameObject:
   m_ObjectHideFlags: 0
@@ -7465,8 +7489,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2041899448}
   m_SourcePrefab: {fileID: 100100000, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+--- !u!1 &2041899447 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+  m_PrefabInstance: {fileID: 2041899446}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2041899448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2041899447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f42ecf2266c20ed429585b82bd5361cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GetHandHeight
+  handSide: 0
+  playermanager: {fileID: 1166901039}
 --- !u!1 &2059735202
 GameObject:
   m_ObjectHideFlags: 0

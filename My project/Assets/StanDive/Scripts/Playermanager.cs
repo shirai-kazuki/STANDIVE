@@ -6,6 +6,9 @@ public class Playermanager : MonoBehaviour
     private Rigidbody rb;
     private float moveSpeed = 15f;
     private float height;
+    // 左手と右手の高さを保存する変数
+    public float leftHandHeight;
+    public float rightHandHeight;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -73,17 +76,27 @@ public class Playermanager : MonoBehaviour
         }
 
         //右に進む
-        if (Keyboard.current.dKey.isPressed)
+        if (leftHandHeight > rightHandHeight + 0.1f) // 左手が右手よりも0.1m以上高い場合
         {
             rb.AddForce(transform.right * moveSpeed);
         }
         //左に進む
-        if (Keyboard.current.aKey.isPressed)
+        if (rightHandHeight > leftHandHeight + 0.1f) // 右手が左手よりも0.1m以上高い場合
         {
             rb.AddForce(-transform.right * moveSpeed);
         }
     }
 
+    // 左手用の高さをセットするための関数
+    public void SetLeftHeight(float height)
+    {
+        leftHandHeight = height;
+    }
 
+    // 右手用の高さをセットするための関数
+    public void SetRightHeight(float height)
+    {
+        rightHandHeight = height;
+    }
 
 }
