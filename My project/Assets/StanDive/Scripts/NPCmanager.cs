@@ -20,7 +20,7 @@ public class NPCmanager : MonoBehaviour
         // 常に正面に進む
         rb.AddForce(transform.forward * speed);
 
-        if (transform.position.y < height - 50f)
+        if (transform.position.y < height - 10f)
         {
             // スクリプトをアクティブ（有効化）にする
             targetScript.enabled = true;

@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;  // プレイヤーのRigidbodyコンポーネントを保存する変数
-    private float maxhorizontalSpeed = 30f;// プレイヤーの最大横移動速度を保存する変数
+    private float maxhorizontalSpeed = 15f;// プレイヤーの最大横移動速度を保存する変数
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
     private float height;// プレイヤーの初期の高さを保存する変数
@@ -64,30 +64,30 @@ public class Playermanager : MonoBehaviour
     private void CalculateMovement()
     {
         // 左手と右手の高さの差を計算
-        heightDifference = leftHandHeight - rightHandHeight;
+        heightDifference = Mathf.Abs(leftHandHeight - rightHandHeight);
 
         // 上下の速度を計算（高さの差が大きいほど速くなる）
-        horizontalSpeed = Mathf.Clamp(heightDifference / 40f * maxhorizontalSpeed, 0f, maxhorizontalSpeed);
+        horizontalSpeed = Mathf.Clamp(heightDifference / 0.1f * maxhorizontalSpeed, 0f, maxhorizontalSpeed);
     }
 
     // プレイヤーを移動させる関数
     private void MovePlayer()
     {
         CalculateMovement();
-        if (transform.position.y < height)
+        if (transform.position.y >= height)
         {
-            rb.AddForce(transform.forward * maxhorizontalSpeed);
+            rb.AddForce(transform.forward * 30f); // 常に正面に飛び出す
         }
 
         //右に進む
-        if (leftHandHeight > rightHandHeight + 0.1f) // 左手が右手よりも0.1m以上高い場合
+        if (leftHandHeight > rightHandHeight) // 左手が右手よりも高い場合
         {
-            rb.AddForce(transform.right * horizontalSpeed * rb.linearDamping);
+            rb.AddForce(transform.right * horizontalSpeed);
         }
         //左に進む
-        if (rightHandHeight > leftHandHeight + 0.1f) // 右手が左手よりも0.1m以上高い場合
+        if (rightHandHeight > leftHandHeight) // 右手が左手よりも高い場合
         {
-            rb.AddForce(-transform.right * horizontalSpeed * rb.linearDamping);
+            rb.AddForce(-transform.right * horizontalSpeed);
         }
     }
 
