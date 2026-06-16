@@ -8,15 +8,17 @@ public class Playermanager : MonoBehaviour
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
     private float height;// プレイヤーの初期の高さを保存する変数
+    private float downheight;// パラシュート展開の高さを保存する変数
     public int progressStep = 0; // 進行状況を管理する変数
     public float leftHandHeight;// 左手と右手の高さを保存する変数
     public float rightHandHeight;
     public Transform target; // 目的地のTransformを保存する変数
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
-    public float rotationspeed = 90f; // 1秒間に回転するスピード（度数）
-    public Vector3 targetAngles = new Vector3(90f, 0f, 0f); // 目標の角度（インスペクターから変更可能）
-    private Quaternion targetRotation;
+    [Header("傾きの設定")]
+    public float tiltSpeed = 30f; // 1秒間に傾く度数
+    private Quaternion tiltUp;
+    private Quaternion tiltDown;
 
     private void Start()
     {
@@ -25,8 +27,13 @@ public class Playermanager : MonoBehaviour
         rb.linearDamping = 0.1f; 
         //初期の高さを保存
         height = transform.position.y;
-        // ゲーム開始時に、目標とする回転（クォータニオン）を計算しておく
-        targetRotation = Quaternion.Euler(targetAngles);
+        downheight = height - 3200f;
+
+        rb.maxAngularVelocity = 1000f; // ブレーキ解除
+
+        // ゲーム開始時に、角度のデータを1度だけ作って保存しておく（エコ！）
+        tiltUp = Quaternion.Euler(30f, 0f, 0f);
+        tiltDown = Quaternion.Euler(0f, 0f, 0f);
     }
     private void FixedUpdate()
     {
@@ -82,6 +89,9 @@ public class Playermanager : MonoBehaviour
         if (transform.position.y >= height)
         {
             rb.AddForce(transform.forward * 30f); // 常に正面に飛び出す
+        }else
+        {
+            TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
         }
 
         //右に進む
@@ -94,6 +104,28 @@ public class Playermanager : MonoBehaviour
         {
             rb.AddForce(-transform.right * horizontalSpeed);
         }
+    }
+
+    private void TiltPlayer()
+    {
+        // 1. 保存しておいた角度から、どちらを目指すか「選ぶ」だけで済むようにする
+        Quaternion targetRotation = tiltUp;
+        
+        if (transform.position.y < downheight) 
+        {
+            targetRotation = tiltDown;
+        }
+
+        // 2. RotateTowardsに戻すことで、最初から最後まで「等速」で動かします
+        // FixedUpdateの中なので、Time.fixedDeltaTimeを掛け算するのが一番正確です
+        Quaternion nextRotation = Quaternion.RotateTowards(
+            rb.rotation, 
+            targetRotation, 
+            tiltSpeed * Time.fixedDeltaTime
+        );
+
+        // 3. 回転を反映
+        rb.MoveRotation(nextRotation);
     }
 
     // 左手用の高さをセットするための関数
@@ -143,14 +175,8 @@ public class Playermanager : MonoBehaviour
     {
         //3番目の処理
         MovePlayer();
-        // 現在の回転から、目標の回転に向かって、毎フレームなめらかに近づける
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, 
-            targetRotation, 
-            rotationspeed * Time.deltaTime
-        );
 
-        if (transform.position.y < height - 3200f)
+        if (transform.position.y < downheight)
         {
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
