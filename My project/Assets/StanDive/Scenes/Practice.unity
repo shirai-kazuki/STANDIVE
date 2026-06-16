@@ -6278,7 +6278,7 @@ GameObject:
   - component: {fileID: 1153174501}
   - component: {fileID: 1153174500}
   m_Layer: 0
-  m_Name: Ground
+  m_Name: Ground_neo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
