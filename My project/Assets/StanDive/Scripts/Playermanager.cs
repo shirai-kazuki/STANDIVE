@@ -16,7 +16,9 @@ public class Playermanager : MonoBehaviour
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
     [Header("傾きの設定")]
-    public float tiltSpeed = 100f; // 1秒間に傾くスピード
+    public float tiltSpeed = 15f; // 1秒間に傾く度数
+    private Quaternion tiltUp;
+    private Quaternion tiltDown;
 
     private void Start()
     {
@@ -26,6 +28,12 @@ public class Playermanager : MonoBehaviour
         //初期の高さを保存
         height = transform.position.y;
         downheight = height - 3200f;
+
+        rb.maxAngularVelocity = 1000f; // ブレーキ解除
+
+        // ゲーム開始時に、角度のデータを1度だけ作って保存しておく（エコ！）
+        tiltUp = Quaternion.Euler(0f, 0f, 0f);
+        tiltDown = Quaternion.Euler(30f, 0f, 0f);
     }
     private void FixedUpdate()
     {
@@ -100,23 +108,23 @@ public class Playermanager : MonoBehaviour
 
     private void TiltPlayer()
     {
-        // 目標の角度（X軸に30度）をクォータニオンに変換
-        Quaternion targetRotation = Quaternion.Euler(30f, 0f, 0f);
-        if(transform.position.y < downheight){
-                // プレイヤーが一定の高さより下に落ちたら、目標の角度をクォータニオンに変換
-                targetRotation = Quaternion.Euler(0f, 0f, 0f);
+        // 1. 保存しておいた角度から、どちらを目指すか「選ぶ」だけで済むようにする
+        Quaternion targetRotation = tiltUp;
+        
+        if (transform.position.y < downheight) 
+        {
+            targetRotation = tiltDown;
         }
 
-        float step = tiltSpeed * Time.fixedDeltaTime; // 1秒間にtiltSpeed度傾くようにするためのステップ量を計算
-
-        // Rigidbodyの現在の回転から、目標の回転へなめらかに近づける角度を計算
+        // 2. RotateTowardsに戻すことで、最初から最後まで「等速」で動かします
+        // FixedUpdateの中なので、Time.fixedDeltaTimeを掛け算するのが一番正確です
         Quaternion nextRotation = Quaternion.RotateTowards(
             rb.rotation, 
             targetRotation, 
-            step
+            tiltSpeed * Time.fixedDeltaTime
         );
 
-        // Rigidbodyを使って安全にオブジェクトを回転させる（物理とケンカしない）
+        // 3. 回転を反映
         rb.MoveRotation(nextRotation);
     }
 
