@@ -8,6 +8,7 @@ public class Playermanager : MonoBehaviour
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
     private float height;// プレイヤーの初期の高さを保存する変数
+    private float downheight;// パラシュート展開の高さを保存する変数
     public int progressStep = 0; // 進行状況を管理する変数
     public float leftHandHeight;// 左手と右手の高さを保存する変数
     public float rightHandHeight;
@@ -15,7 +16,7 @@ public class Playermanager : MonoBehaviour
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
     [Header("傾きの設定")]
-    public float tiltSpeed = 90f; // 1秒間に傾くスピード
+    public float tiltSpeed = 100f; // 1秒間に傾くスピード
 
     private void Start()
     {
@@ -24,6 +25,7 @@ public class Playermanager : MonoBehaviour
         rb.linearDamping = 0.1f; 
         //初期の高さを保存
         height = transform.position.y;
+        downheight = height - 3200f;
     }
     private void FixedUpdate()
     {
@@ -79,6 +81,9 @@ public class Playermanager : MonoBehaviour
         if (transform.position.y >= height)
         {
             rb.AddForce(transform.forward * 30f); // 常に正面に飛び出す
+        }else
+        {
+            TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
         }
 
         //右に進む
@@ -97,12 +102,18 @@ public class Playermanager : MonoBehaviour
     {
         // 目標の角度（X軸に30度）をクォータニオンに変換
         Quaternion targetRotation = Quaternion.Euler(30f, 0f, 0f);
+        if(transform.position.y < downheight){
+                // プレイヤーが一定の高さより下に落ちたら、目標の角度をクォータニオンに変換
+                targetRotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+
+        float step = tiltSpeed * Time.fixedDeltaTime; // 1秒間にtiltSpeed度傾くようにするためのステップ量を計算
 
         // Rigidbodyの現在の回転から、目標の回転へなめらかに近づける角度を計算
         Quaternion nextRotation = Quaternion.RotateTowards(
             rb.rotation, 
             targetRotation, 
-            tiltSpeed * Time.fixedDeltaTime // FixedUpdate内なので fixedDeltaTime を使います
+            step
         );
 
         // Rigidbodyを使って安全にオブジェクトを回転させる（物理とケンカしない）
@@ -156,9 +167,8 @@ public class Playermanager : MonoBehaviour
     {
         //3番目の処理
         MovePlayer();
-        TiltPlayer();
 
-        if (transform.position.y < height - 3200f)
+        if (transform.position.y < downheight)
         {
             // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
