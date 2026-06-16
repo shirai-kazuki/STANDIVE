@@ -16,7 +16,7 @@ public class Playermanager : MonoBehaviour
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
     [Header("傾きの設定")]
-    public float tiltSpeed = 15f; // 1秒間に傾く度数
+    public float tiltSpeed = 30f; // 1秒間に傾く度数
     private Quaternion tiltUp;
     private Quaternion tiltDown;
 
@@ -32,8 +32,8 @@ public class Playermanager : MonoBehaviour
         rb.maxAngularVelocity = 1000f; // ブレーキ解除
 
         // ゲーム開始時に、角度のデータを1度だけ作って保存しておく（エコ！）
-        tiltUp = Quaternion.Euler(0f, 0f, 0f);
-        tiltDown = Quaternion.Euler(30f, 0f, 0f);
+        tiltUp = Quaternion.Euler(30f, 0f, 0f);
+        tiltDown = Quaternion.Euler(0f, 0f, 0f);
     }
     private void FixedUpdate()
     {
