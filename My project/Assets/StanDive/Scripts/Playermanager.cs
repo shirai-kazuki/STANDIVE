@@ -14,6 +14,9 @@ public class Playermanager : MonoBehaviour
     public Transform target; // 目的地のTransformを保存する変数
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
+    public float rotationspeed = 90f; // 1秒間に回転するスピード（度数）
+    public Vector3 targetAngles = new Vector3(90f, 0f, 0f); // 目標の角度（インスペクターから変更可能）
+    private Quaternion targetRotation;
 
     private void Start()
     {
@@ -22,6 +25,8 @@ public class Playermanager : MonoBehaviour
         rb.linearDamping = 0.1f; 
         //初期の高さを保存
         height = transform.position.y;
+        // ゲーム開始時に、目標とする回転（クォータニオン）を計算しておく
+        targetRotation = Quaternion.Euler(targetAngles);
     }
     private void FixedUpdate()
     {
@@ -138,6 +143,12 @@ public class Playermanager : MonoBehaviour
     {
         //3番目の処理
         MovePlayer();
+        // 現在の回転から、目標の回転に向かって、毎フレームなめらかに近づける
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, 
+            targetRotation, 
+            rotationspeed * Time.deltaTime
+        );
 
         if (transform.position.y < height - 3200f)
         {
