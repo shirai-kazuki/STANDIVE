@@ -6304,8 +6304,7 @@ MonoBehaviour:
   rightHandHeight: 0
   target: {fileID: 2065262510}
   arrivalThreshold: 0.1
-  rotationspeed: 90
-  targetAngles: {x: 90, y: 0, z: 0}
+  tiltSpeed: 90
 --- !u!54 &1166901040
 Rigidbody:
   m_ObjectHideFlags: 0
