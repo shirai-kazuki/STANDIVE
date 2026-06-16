@@ -27,7 +27,7 @@ public class Playermanager : MonoBehaviour
             //空気抵抗を0.5にする
             rb.linearDamping = 0.5f;
         }
-        if (transform.position.y < height - 3200f)
+        if (transform.position.y < height - 200f)
         {
             //空気抵抗を1にする
             rb.linearDamping = 1f;
