@@ -20,7 +20,7 @@ public class DetectParachute : MonoBehaviour
     void Start()
     {
         // 最初の位置を記録
-        lastPosition = transform.position;
+        lastPosition = transform.position - playermanager.GetPlayerPosition();
     }
 
     void Update()
@@ -41,35 +41,33 @@ public class DetectParachute : MonoBehaviour
         }
 
         // 一定以上の速さで動いているかチェック
-        if (Mathf.Abs(speedY) > downSpeedThreshold)
+        if (speedY < -downSpeedThreshold)
         {
-            // 動いている向き（上か下か）を判定
-            nowMovingDown = speedY > 0;
+            nowMovingDown = true; // 下降中とみなす
+        }
 
-            // 前のフレームと逆の向きに切り替わった瞬間を捉える（往復の検出）
-            if (nowMovingDown)
+        if (nowMovingDown)
+        {
+            // 管理スクリプトに手を下げたかを送る
+            if (handSide == HandSide.Left)
             {
-                // 管理スクリプトに手を下げたかを送る
-                if (handSide == HandSide.Left)
-                {
-                    playermanager.SetisLeftHandDown(true);
-                }
-                else if (handSide == HandSide.Right)
-                {
-                    playermanager.SetisRightHandDown(true);
-                }
+                playermanager.SetisLeftHandDown(true);
             }
-            else
+            else if (handSide == HandSide.Right)
             {
-                // 管理スクリプトに手を下げたかを送る
-                if (handSide == HandSide.Left)
-                {
-                    playermanager.SetisLeftHandDown(false);
-                }
-                else if (handSide == HandSide.Right)
-                {
-                    playermanager.SetisRightHandDown(false);
-                }
+                playermanager.SetisRightHandDown(true);
+            }
+        }
+        else
+        {
+            // 管理スクリプトに手を下げたかを送る
+            if (handSide == HandSide.Left)
+            {
+                playermanager.SetisLeftHandDown(false);
+            }
+            else if (handSide == HandSide.Right)
+            {
+                playermanager.SetisRightHandDown(false);
             }
         }
 

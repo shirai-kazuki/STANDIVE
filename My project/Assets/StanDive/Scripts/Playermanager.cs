@@ -21,6 +21,7 @@ public class Playermanager : MonoBehaviour
     public float tiltSpeed = 30f; // 1秒間に傾く度数
     private Quaternion tiltUp;
     private Quaternion tiltDown;
+    private Quaternion targetRotation;
 
     private void Start()
     {
@@ -29,13 +30,16 @@ public class Playermanager : MonoBehaviour
         rb.linearDamping = 0.1f; 
         //初期の高さを保存
         height = transform.position.y;
-        downheight = height - 0f;
+        downheight = height - 3200f;
 
         rb.maxAngularVelocity = 1000f; // ブレーキ解除
 
         // ゲーム開始時に、角度のデータを1度だけ作って保存しておく（エコ！）
         tiltUp = Quaternion.Euler(30f, 0f, 0f);
         tiltDown = Quaternion.Euler(0f, 0f, 0f);
+
+        // 1. 保存しておいた角度から、どちらを目指すか「選ぶ」だけで済むようにする
+        targetRotation = tiltUp;
     }
     private void FixedUpdate()
     {
@@ -109,10 +113,7 @@ public class Playermanager : MonoBehaviour
     }
 
     private void TiltPlayer()
-    {
-        // 1. 保存しておいた角度から、どちらを目指すか「選ぶ」だけで済むようにする
-        Quaternion targetRotation = tiltUp;
-        
+    {   
         if (transform.position.y < downheight && isLeftHandDown && isRightHandDown) 
         {
             targetRotation = tiltDown;
@@ -160,7 +161,7 @@ public class Playermanager : MonoBehaviour
         isRightHandDown = isDown;
     }
 
-    private Vector3 GetPlayerPosition()
+    public Vector3 GetPlayerPosition()
     {
         return transform.position;
     }
@@ -194,6 +195,11 @@ public class Playermanager : MonoBehaviour
     {
         //3番目の処理
         MovePlayer();
+
+        if(transform.position.y > downheight){
+            isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
+            isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
+        }
 
         // 左手と右手が両方とも下に動いたかを確認
         if (transform.position.y < downheight && isLeftHandDown && isRightHandDown)
