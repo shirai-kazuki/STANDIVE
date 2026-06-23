@@ -29,7 +29,7 @@ public class Playermanager : MonoBehaviour
         rb.linearDamping = 0.1f; 
         //初期の高さを保存
         height = transform.position.y;
-        downheight = height - 3200f;
+        downheight = height - 0f;
 
         rb.maxAngularVelocity = 1000f; // ブレーキ解除
 
@@ -113,7 +113,7 @@ public class Playermanager : MonoBehaviour
         // 1. 保存しておいた角度から、どちらを目指すか「選ぶ」だけで済むようにする
         Quaternion targetRotation = tiltUp;
         
-        if (transform.position.y < downheight) 
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown) 
         {
             targetRotation = tiltDown;
         }
@@ -160,6 +160,11 @@ public class Playermanager : MonoBehaviour
         isRightHandDown = isDown;
     }
 
+    private Vector3 GetPlayerPosition()
+    {
+        return transform.position;
+    }
+
     public void FirstProcess()
     {
         //最初の処理
@@ -191,7 +196,7 @@ public class Playermanager : MonoBehaviour
         MovePlayer();
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (isLeftHandDown && isRightHandDown)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown)
         {
             // 子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");

@@ -7192,7 +7192,7 @@ MonoBehaviour:
   handSide: 1
   downSpeedThreshold: 1.5
   downTimeout: 1
-  playermanager: {fileID: 0}
+  playermanager: {fileID: 1166901039}
 --- !u!1 &1524831990
 GameObject:
   m_ObjectHideFlags: 0
@@ -7637,7 +7637,7 @@ MonoBehaviour:
   handSide: 0
   downSpeedThreshold: 1.5
   downTimeout: 1
-  playermanager: {fileID: 0}
+  playermanager: {fileID: 1166901039}
 --- !u!1 &2059735202
 GameObject:
   m_ObjectHideFlags: 0

@@ -26,7 +26,8 @@ public class DetectParachute : MonoBehaviour
     void Update()
     {
         // 今のフレームでの移動速度（y軸：上下の動き）を計算
-        Vector3 currentPosition = transform.position;
+        Vector3 playerPosition = playermanager.GetPlayerPosition();
+        Vector3 currentPosition = transform.position - playerPosition;
         float speedY = (currentPosition.y - lastPosition.y) / Time.deltaTime;
 
         // 2. 制限時間のタイマーをすすめる
