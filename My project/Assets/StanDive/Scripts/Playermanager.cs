@@ -15,6 +15,8 @@ public class Playermanager : MonoBehaviour
     public Transform target; // 目的地のTransformを保存する変数
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
+    private bool isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
+    private bool isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
     [Header("傾きの設定")]
     public float tiltSpeed = 30f; // 1秒間に傾く度数
     private Quaternion tiltUp;
@@ -146,6 +148,18 @@ public class Playermanager : MonoBehaviour
         isHandWave = isWave;
     }
 
+    // 左手を下げたかどうかをセットするための関数
+    public void SetisLeftHandDown(bool isDown)
+    {
+        isLeftHandDown = isDown;
+    }
+
+    // 右手を下げたかどうかをセットするための関数
+    public void SetisRightHandDown(bool isDown)
+    {
+        isRightHandDown = isDown;
+    }
+
     public void FirstProcess()
     {
         //最初の処理
@@ -176,11 +190,12 @@ public class Playermanager : MonoBehaviour
         //3番目の処理
         MovePlayer();
 
-        if (transform.position.y < downheight)
+        // 左手と右手が両方とも下に動いたかを確認
+        if (isLeftHandDown && isRightHandDown)
         {
-            // プレイヤーが一定の高さより下に落ちたら、子オブジェクトをアクティブにする
+            // 子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
-            // プレイヤーが一定の高さより下に落ちたら、子オブジェクトを非アクティブにする
+            // 子オブジェクトを非アクティブにする
             DeactivateChildByName("WindPressure");
    
             //空気抵抗を1にする

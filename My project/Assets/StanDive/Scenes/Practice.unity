@@ -575,6 +575,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1510890451}
+    - targetCorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1510890452}
   m_SourcePrefab: {fileID: 100100000, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
 --- !u!1 &262739365 stripped
 GameObject:
@@ -6304,8 +6307,7 @@ MonoBehaviour:
   rightHandHeight: 0
   target: {fileID: 2065262510}
   arrivalThreshold: 0.1
-  rotationspeed: 90
-  targetAngles: {x: 90, y: 0, z: 0}
+  tiltSpeed: 30
 --- !u!54 &1166901040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7175,6 +7177,22 @@ MonoBehaviour:
   requiredWaveCount: 3
   waveTimeout: 1
   playermanager: {fileID: 1166901039}
+--- !u!114 &1510890452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262739365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e050c8f063b9774697d77cc0355d890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectParachute
+  handSide: 1
+  downSpeedThreshold: 1.5
+  downTimeout: 1
+  playermanager: {fileID: 0}
 --- !u!1 &1524831990
 GameObject:
   m_ObjectHideFlags: 0
@@ -7565,6 +7583,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2041899455}
+    - targetCorrespondingSourceObject: {fileID: 1870938896605422, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2041899456}
   m_SourcePrefab: {fileID: 100100000, guid: 835e735ca71bf78459fb2cababd74112, type: 3}
 --- !u!1 &2041899447 stripped
 GameObject:
@@ -7601,6 +7622,22 @@ MonoBehaviour:
   requiredWaveCount: 3
   waveTimeout: 1
   playermanager: {fileID: 1166901039}
+--- !u!114 &2041899456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2041899447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e050c8f063b9774697d77cc0355d890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectParachute
+  handSide: 0
+  downSpeedThreshold: 1.5
+  downTimeout: 1
+  playermanager: {fileID: 0}
 --- !u!1 &2059735202
 GameObject:
   m_ObjectHideFlags: 0
