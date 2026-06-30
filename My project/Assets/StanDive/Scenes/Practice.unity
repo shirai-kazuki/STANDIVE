@@ -193,9 +193,6 @@ GameObject:
   m_Component:
   - component: {fileID: 20060675}
   - component: {fileID: 20060679}
-  - component: {fileID: 20060678}
-  - component: {fileID: 20060677}
-  - component: {fileID: 20060676}
   m_Layer: 0
   m_Name: NPC (2)
   m_TagString: Untagged
@@ -220,68 +217,6 @@ Transform:
   - {fileID: 595140939}
   m_Father: {fileID: 1440537531}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 61.749}
---- !u!114 &20060676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20060674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &20060677
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20060674}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &20060678
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 20060674}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &20060679
 Animator:
   serializedVersion: 7
@@ -1939,6 +1874,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: "\u30D8\u30EA\u30B3\u30D7\u30BF\u30FC"
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 78432c715e905654a96a1e0dcfa9bbaa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2743,9 +2682,6 @@ GameObject:
   m_Component:
   - component: {fileID: 257284167}
   - component: {fileID: 257284171}
-  - component: {fileID: 257284170}
-  - component: {fileID: 257284169}
-  - component: {fileID: 257284168}
   m_Layer: 0
   m_Name: NPC (2)
   m_TagString: Untagged
@@ -2770,68 +2706,6 @@ Transform:
   - {fileID: 440120576}
   m_Father: {fileID: 901664999}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 61.749}
---- !u!114 &257284168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 257284166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &257284169
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 257284166}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &257284170
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 257284166}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &257284171
 Animator:
   serializedVersion: 7
@@ -3480,7 +3354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dccea0e5ce3e3ec4483bfa638487867f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.22412
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dccea0e5ce3e3ec4483bfa638487867f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3488,7 +3362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dccea0e5ce3e3ec4483bfa638487867f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.4592285
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: dccea0e5ce3e3ec4483bfa638487867f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4796,9 +4670,6 @@ GameObject:
   m_Component:
   - component: {fileID: 438454702}
   - component: {fileID: 438454706}
-  - component: {fileID: 438454705}
-  - component: {fileID: 438454704}
-  - component: {fileID: 438454703}
   m_Layer: 0
   m_Name: NPC (1)
   m_TagString: Untagged
@@ -4823,68 +4694,6 @@ Transform:
   - {fileID: 1535023527}
   m_Father: {fileID: 901664999}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &438454703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438454701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &438454704
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438454701}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &438454705
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438454701}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &438454706
 Animator:
   serializedVersion: 7
@@ -8086,9 +7895,6 @@ GameObject:
   m_Component:
   - component: {fileID: 699475819}
   - component: {fileID: 699475823}
-  - component: {fileID: 699475822}
-  - component: {fileID: 699475821}
-  - component: {fileID: 699475820}
   m_Layer: 0
   m_Name: NPC (2)
   m_TagString: Untagged
@@ -8113,68 +7919,6 @@ Transform:
   - {fileID: 1921429699}
   m_Father: {fileID: 38253034}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 61.749}
---- !u!114 &699475820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699475818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &699475821
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699475818}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &699475822
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699475818}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &699475823
 Animator:
   serializedVersion: 7
@@ -8593,9 +8337,6 @@ GameObject:
   m_Component:
   - component: {fileID: 739160638}
   - component: {fileID: 739160642}
-  - component: {fileID: 739160641}
-  - component: {fileID: 739160640}
-  - component: {fileID: 739160639}
   m_Layer: 0
   m_Name: NPC (1)
   m_TagString: Untagged
@@ -8620,68 +8361,6 @@ Transform:
   - {fileID: 2020266405}
   m_Father: {fileID: 38253034}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &739160639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739160637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &739160640
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739160637}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &739160641
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739160637}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &739160642
 Animator:
   serializedVersion: 7
@@ -16740,7 +16419,7 @@ Transform:
   m_GameObject: {fileID: 1059766406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5000.002, y: 3493.41, z: 2022.36}
+  m_LocalPosition: {x: 5000.002, y: 3410.16, z: 2022.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16917,9 +16596,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1086650331}
   - component: {fileID: 1086650335}
-  - component: {fileID: 1086650334}
-  - component: {fileID: 1086650333}
-  - component: {fileID: 1086650332}
   m_Layer: 0
   m_Name: NPC (1)
   m_TagString: Untagged
@@ -16944,68 +16620,6 @@ Transform:
   - {fileID: 671588690}
   m_Father: {fileID: 1440537531}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &1086650332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1086650330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &1086650333
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1086650330}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &1086650334
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1086650330}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &1086650335
 Animator:
   serializedVersion: 7
@@ -17540,7 +17154,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1166901038}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68fc2838d68c00449af56d7627decd34, type: 3}
   m_Name: 
@@ -23573,7 +23187,7 @@ Transform:
   m_GameObject: {fileID: 1673838541}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 9.204956, z: 0.28503418}
+  m_LocalPosition: {x: 0, y: 9.204956, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -27020,9 +26634,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2046869602}
   - component: {fileID: 2046869606}
-  - component: {fileID: 2046869605}
-  - component: {fileID: 2046869604}
-  - component: {fileID: 2046869603}
   m_Layer: 0
   m_Name: NPC (2)
   m_TagString: Untagged
@@ -27047,68 +26658,6 @@ Transform:
   - {fileID: 1802958785}
   m_Father: {fileID: 260544239}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 61.749}
---- !u!114 &2046869603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2046869601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &2046869604
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2046869601}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &2046869605
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2046869601}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &2046869606
 Animator:
   serializedVersion: 7
@@ -27507,8 +27056,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2065262509}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5000.002, y: 3500.664, z: 2003.545}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5000.002, y: 3500.664, z: 2003.795}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -28201,9 +27750,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2104334244}
   - component: {fileID: 2104334248}
-  - component: {fileID: 2104334247}
-  - component: {fileID: 2104334246}
-  - component: {fileID: 2104334245}
   m_Layer: 0
   m_Name: NPC (1)
   m_TagString: Untagged
@@ -28228,68 +27774,6 @@ Transform:
   - {fileID: 791393895}
   m_Father: {fileID: 260544239}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &2104334245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2104334243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5621fc010bcca4c80115b51425622c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCmanager
-  speed: 5
-  targetScript: {fileID: 1166901039}
---- !u!65 &2104334246
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2104334243}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34277326, y: 1.7166748, z: 0.31847432}
-  m_Center: {x: -0.013505265, y: 0.88494873, z: 0.014014767}
---- !u!54 &2104334247
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2104334243}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &2104334248
 Animator:
   serializedVersion: 7
@@ -39206,8 +38690,8 @@ SceneRoots:
   - {fileID: 2143352017}
   - {fileID: 1166901044}
   - {fileID: 5418157979750368128}
-  - {fileID: 8442283259074783187}
   - {fileID: 2065262510}
+  - {fileID: 8442283259074783187}
   - {fileID: 138809891}
   - {fileID: 1861272593}
   - {fileID: 591651499}
