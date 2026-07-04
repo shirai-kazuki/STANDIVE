@@ -5,6 +5,7 @@ public class NPCmanager : MonoBehaviour
     private Rigidbody rb;
     public float speed = 0.1f; // 移動スピード
     private float height;
+    private bool isdiving = false;
     // インスペクターで対象のスクリプトを指定する
     [SerializeField] private MonoBehaviour targetScript;
 
@@ -17,15 +18,29 @@ public class NPCmanager : MonoBehaviour
 
     void Update()
     {
-        // 常に正面に進む
-        rb.AddForce(transform.forward * speed);
-
-        if (transform.position.y < height - 10f)
+        if (isdiving)
+        {
+            Move();
+        }
+        
+        if(transform.position.y < height - 10f)
         {
             // スクリプトをアクティブ（有効化）にする
             targetScript.enabled = true;
             // 自分自身を非アクティブ（消す/隠す）にする
             gameObject.SetActive(false);
         }
+    }
+
+    void Move()
+    {
+        // 常に正面に進む
+        Vector3 direction = Vector3.forward * speed;
+        transform.Translate(direction * Time.deltaTime);
+    }
+
+    void SetIsdiving()
+    {
+        isdiving = true;
     }
 }
