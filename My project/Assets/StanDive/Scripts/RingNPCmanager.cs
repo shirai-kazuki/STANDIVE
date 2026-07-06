@@ -4,13 +4,14 @@ using UnityEngine.InputSystem;
 public class RingNPCmanager : MonoBehaviour
 {
     public Transform target; // 目的地のTransformを保存する変数
-    private float speed = 100f;
+    private float speed = 300f;
     private float arrivalThreshold = 0.1f; // 到達とみなす距離
     private Quaternion startRotation;
     // 目標の角度
-        Quaternion targetRotation;
+    private Quaternion targetRotation;
     // 回転するスピード
-    public float rotationSpeed = 5.0f; 
+    public float rotationSpeed = 90f; 
+    private Vector3 targetPosition;
 
     void Start()
     {
