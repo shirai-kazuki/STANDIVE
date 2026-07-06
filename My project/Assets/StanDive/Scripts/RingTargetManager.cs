@@ -3,7 +3,7 @@ using UnityEngine;
 public class RingTargetManager : MonoBehaviour
 {
     public Transform target; // 目的地のTransformを保存する変数
-    public float speed = 100f;
+    public float speed = 500f;
     private float vertical;
     private float horizontal;
 

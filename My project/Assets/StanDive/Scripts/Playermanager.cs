@@ -5,6 +5,7 @@ public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;  // プレイヤーのRigidbodyコンポーネントを保存する変数
     private float maxhorizontalSpeed = 15f;// プレイヤーの最大横移動速度を保存する変数
+    private float fallSpeed = 100f;// プレイヤーの落下速度を保存する変数
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
     private float height;// プレイヤーの初期の高さを保存する変数
@@ -91,6 +92,9 @@ public class Playermanager : MonoBehaviour
     // プレイヤーを移動させる関数
     private void MovePlayer()
     {
+        // Y軸のみ「-fallSpeed」で固定し、XとZの速度は現在の状態を維持する
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, -fallSpeed, rb.linearVelocity.z);
+
         CalculateMovement();
         if (transform.position.y >= height)
         {
@@ -209,8 +213,8 @@ public class Playermanager : MonoBehaviour
             // 子オブジェクトを非アクティブにする
             DeactivateChildByName("WindPressure");
    
-            //空気抵抗を1にする
-            rb.linearDamping = 1f;
+            //速度を落とす
+            fallSpeed = 30f;
         }
     }
 
