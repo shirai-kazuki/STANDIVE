@@ -9,8 +9,8 @@ public class RingTargetManager : MonoBehaviour
 
     void Start()
     {
-        vertical = 3400f;
-        horizontal = 5010f;
+        vertical = 3520f;
+        SetHorizontal(5000f);
     }
 
     void Update()
@@ -20,6 +20,12 @@ public class RingTargetManager : MonoBehaviour
         // ターゲットの座標を計算
         Vector3 targetPosition = target.position;
 
+        if(targetPosition.y <= transform.position.y && targetPosition.y <= 3500f && targetPosition.y >= 500f)
+            {
+                vertical = targetPosition.y - 200f;
+                SetHorizontal(targetPosition.x);
+            }
+
         // XY座標だけ「自分自身の高さ」に書き換える（ターゲットのYを無視）
         targetPosition.y = vertical;
         targetPosition.x = horizontal;
@@ -27,6 +33,12 @@ public class RingTargetManager : MonoBehaviour
         // 移動処理
         float step = speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+
     }
+    }
+
+    public void SetHorizontal(float TargetX)
+    {
+        horizontal = Random.Range(TargetX - 50f, TargetX + 50f);
     }
 }
