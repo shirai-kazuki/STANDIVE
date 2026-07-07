@@ -3,7 +3,6 @@ using UnityEngine;
 public class RingTargetManager : MonoBehaviour
 {
     public Transform target; // 目的地のTransformを保存する変数
-    public float speed = 500f;
     private float vertical;
     private float horizontal;
 
@@ -20,9 +19,9 @@ public class RingTargetManager : MonoBehaviour
         // ターゲットの座標を計算
         Vector3 targetPosition = target.position;
 
-        if(targetPosition.y <= transform.position.y && targetPosition.y <= 3500f && targetPosition.y >= 500f)
+        if(targetPosition.y <= transform.position.y && targetPosition.y <= 3500f && targetPosition.y >= 300f)
             {
-                vertical = targetPosition.y - 200f;
+                vertical = targetPosition.y - 400f;
                 SetHorizontal(targetPosition.x);
             }
 
@@ -31,14 +30,13 @@ public class RingTargetManager : MonoBehaviour
         targetPosition.x = horizontal;
 
         // 移動処理
-        float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+        transform.position = targetPosition;
 
     }
     }
 
     public void SetHorizontal(float TargetX)
     {
-        horizontal = Random.Range(TargetX - 50f, TargetX + 50f);
+        horizontal = Random.Range(TargetX - 3f, TargetX + 3f);
     }
 }

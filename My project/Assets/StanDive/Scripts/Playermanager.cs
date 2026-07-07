@@ -5,7 +5,7 @@ public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;  // プレイヤーのRigidbodyコンポーネントを保存する変数
     private float maxhorizontalSpeed = 15f;// プレイヤーの最大横移動速度を保存する変数
-    private float fallSpeed = 100f;// プレイヤーの落下速度を保存する変数
+    private float fallSpeed = 1f;// プレイヤーの落下速度を保存する変数
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
     private float height;// プレイヤーの初期の高さを保存する変数
@@ -19,7 +19,7 @@ public class Playermanager : MonoBehaviour
     private bool isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
     private bool isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
     [Header("傾きの設定")]
-    public float tiltSpeed = 30f; // 1秒間に傾く度数
+    public float tiltSpeed = 60f; // 1秒間に傾く度数
     private Quaternion tiltUp;
     private Quaternion tiltDown;
     private Quaternion targetRotation;
@@ -98,10 +98,11 @@ public class Playermanager : MonoBehaviour
         CalculateMovement();
         if (transform.position.y >= height)
         {
-            rb.AddForce(transform.forward * 30f); // 常に正面に飛び出す
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, 30f); ; // 常に正面に飛び出す
         }else
         {
             TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
+            fallSpeed = 30f;
         }
 
         //右に進む
@@ -214,7 +215,7 @@ public class Playermanager : MonoBehaviour
             DeactivateChildByName("WindPressure");
    
             //速度を落とす
-            fallSpeed = 30f;
+            fallSpeed = 5f;
         }
     }
 
