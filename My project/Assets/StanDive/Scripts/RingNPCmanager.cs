@@ -4,13 +4,13 @@ using UnityEngine.InputSystem;
 public class RingNPCmanager : MonoBehaviour
 {
     public Transform target; // 目的地のTransformを保存する変数
-    private float speed = 100f;
-    private float arrivalThreshold = 0.1f; // 到達とみなす距離
+    private float speed = 50f;
+    private float arrivalThreshold = 0f; // 到達とみなす距離
     private Quaternion startRotation;
     // 目標の角度
     private Quaternion targetRotation;
     // 回転するスピード
-    public float rotationSpeed = 360f; 
+    private float rotationSpeed = 30f; 
     private Vector3 targetPosition;
 
     void Start()
@@ -26,18 +26,28 @@ public class RingNPCmanager : MonoBehaviour
             // ターゲットの座標を計算
             Vector3 targetPosition = target.position;
 
+            // 上に消えるためのに速度を上げる
+            if(transform.position.y < 300f)
+            {
+                speed =25f;
+            }
+
             // 移動処理
-            float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+            if(target.position.y < 3400f)
+            {
+                float step = speed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+            }
 
             // 現在地と目的地の距離を計算
-            float distance = Vector3.Distance(transform.position, target.position);
+            float distance = transform.position.y - target.position.y;
 
             // 距離が閾値以下になったら到着とする
             if (distance <= arrivalThreshold)
             {
                 // 初期姿勢
                 targetRotation = startRotation;
+                speed = 2f;
             }
             else
             {

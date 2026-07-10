@@ -34,10 +34,10 @@ public class MouseBehaviourScript : MonoBehaviour
         yRot += v;
 
         // 上下制限
-        xRot = Mathf.Clamp(xRot, -maxUpAngle, maxDownAngle);
+        //xRot = Mathf.Clamp(xRot, -maxUpAngle, maxDownAngle);
 
         // 左右制限
-        yRot = Mathf.Clamp(yRot, -maxHorizontalAngle, maxHorizontalAngle);
+        //yRot = Mathf.Clamp(yRot, -maxHorizontalAngle, maxHorizontalAngle);
 
         transform.rotation = Quaternion.Euler(xRot, yRot, 0);
     }

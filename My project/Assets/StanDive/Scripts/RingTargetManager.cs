@@ -1,42 +1,61 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RingTargetManager : MonoBehaviour
 {
-    public Transform target; // 目的地のTransformを保存する変数
-    private float vertical;
-    private float horizontal;
+    // [SerializeField]をつけることでインスペクターに表示されます
+    [SerializeField] private List<Transform> targetChildren = new List<Transform>();
+
+    [SerializeField] private float minHeight = -30f;
+    [SerializeField] private float maxHeight = -5f;
+    [SerializeField] private float intervalSeconds = 5f;
+
+    // 現在計測中の時間を記録する変数（インスペクターで確認可能）
+    [SerializeField] private float currentTimer = 0f;
 
     void Start()
     {
-        vertical = 3520f;
-        SetHorizontal(5000f);
+        RandomizeHeights();
     }
 
     void Update()
     {
-        if (target != null)
-    {
-        // ターゲットの座標を計算
-        Vector3 targetPosition = target.position;
+        // 1. 前のフレームからの経過時間を足していく
+        currentTimer += Time.deltaTime;
 
-        if(targetPosition.y <= transform.position.y && targetPosition.y <= 3500f && targetPosition.y >= 300f)
+        // 2. 計測時間が設定した秒数（5秒）を超えたかチェック
+        if (currentTimer >= intervalSeconds)
+        {
+            // 高さをランダムに変える処理を実行
+            RandomizeHeights();
+
+            // 3. タイマーをリセット（0に戻す）
+            currentTimer = 0f;
+        }
+    }
+
+    void RandomizeHeights()
+    {
+        // リストが空の場合はエラーを防ぐために処理をスキップ
+        if (targetChildren == null || targetChildren.Count == 0) return;
+
+        // インスペクターで登録されたオブジェクトをループ処理
+        foreach (Transform childTransform in targetChildren)
+        {
+            if (childTransform == null) continue; // 空のスロット対策
+
+            Vector3 pos = childTransform.position;
+            if(transform.position.y > 300f)
             {
-                vertical = targetPosition.y - 400f;
-                SetHorizontal(targetPosition.x);
+                pos.y = transform.position.y + Random.Range(minHeight, maxHeight) - 10f;
             }
-
-        // XY座標だけ「自分自身の高さ」に書き換える（ターゲットのYを無視）
-        targetPosition.y = vertical;
-        targetPosition.x = horizontal;
-
-        // 移動処理
-        transform.position = targetPosition;
-
-    }
+            else
+            {
+                pos.y = 600f;
+            }
+            
+            childTransform.position = pos;
+        }
     }
 
-    public void SetHorizontal(float TargetX)
-    {
-        horizontal = Random.Range(TargetX - 3f, TargetX + 3f);
-    }
 }
