@@ -105,6 +105,11 @@ public class Playermanager : MonoBehaviour
             fallSpeed = 30f;
         }
 
+        if (transform.position.y < height - 10f)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, 0f); ; // 前に移動しないようにする
+        }
+
         //右に進む
         if (leftHandHeight > rightHandHeight) // 左手が右手よりも高い場合
         {

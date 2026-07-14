@@ -3,62 +3,90 @@ using UnityEngine.InputSystem;
 
 public class RingNPCmanager : MonoBehaviour
 {
-    public Transform target; // 目的地のTransformを保存する変数
+    public Transform target; 
     private float speed = 50f;
-    private float arrivalThreshold = 0f; // 到達とみなす距離
+    private float arrivalThreshold = 0f; 
     private Quaternion startRotation;
-    // 目標の角度
-    private Quaternion targetRotation;
-    // 回転するスピード
-    private float rotationSpeed = 30f; 
+    
+    private float rotationSpeed = 10f; 
     private Vector3 targetPosition;
+
+    // -------------------------------------------------------------
+    // ★新しく追加：前後の傾き（X）と左右の傾き（Z）を個別に保存する変数
+    // -------------------------------------------------------------
+    private float targetPitchX = 0f; // 前後の傾き
+    private float targetRollZ = 0f;  // 左右の傾き
+    private float baseAngleY = 0f;   // 初期状態のY軸（向き）をキープ用
 
     void Start()
     {
-        // ゲーム開始時の初期姿勢を記憶しておく
         startRotation = transform.rotation;
+        
+        // 初期状態の各軸の角度を記憶しておく
+        targetPitchX = startRotation.eulerAngles.x;
+        baseAngleY = startRotation.eulerAngles.y;
+        targetRollZ = startRotation.eulerAngles.z;
+    }
+
+    // -------------------------------------------------------------
+    // ★外部や内部から「前後の傾き」をセットする関数
+    // -------------------------------------------------------------
+    public void SetPitch(float xAngle)
+    {
+        targetPitchX = xAngle;
+    }
+
+    // -------------------------------------------------------------
+    // ★外部や内部から「左右の傾き」をセットする関数
+    // -------------------------------------------------------------
+    public void SetRoll(float zAngle)
+    {
+        targetRollZ = zAngle;
     }
 
     void Update()
     {
         if (target != null)
         {
-            // ターゲットの座標を計算
             Vector3 targetPosition = target.position;
 
-            // 上に消えるためのに速度を上げる
             if(transform.position.y < 300f)
             {
-                speed =25f;
+                speed = 25f;
             }
 
-            // 移動処理
             if(target.position.y < 3400f)
             {
                 float step = speed * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             }
 
-            // 現在地と目的地の距離を計算
+            // 到着判定による「前後の傾き（X軸）」の切り替え
             float distance = transform.position.y - target.position.y;
 
-            // 距離が閾値以下になったら到着とする
             if (distance <= arrivalThreshold)
             {
-                // 初期姿勢
-                targetRotation = startRotation;
+                // 到着：初期のX角度に戻す（関数を使ってセット）
+                SetPitch(startRotation.eulerAngles.x);
                 speed = 2f;
             }
             else
             {
-                // 初期姿勢からY軸だけ90度傾いた状態
-                targetRotation = startRotation * Quaternion.Euler(90, 0, 0);
+                // 移動中：初期のX角度から90度倒す（関数を使ってセット）
+                SetPitch(startRotation.eulerAngles.x + 90f);
             }
 
-            // 現在の角度から、目標の角度へ「徐々に」近づける
+            // -------------------------------------------------------------
+            // ★セットされた変数（targetPitchX, targetRollZ）から最終的な角度を求める
+            // -------------------------------------------------------------
+            // Y軸（向き）は初期の向き、またはアニメーション等に合わせるなら現在の向き(transform.eulerAngles.y)にします
+            Vector3 combinedEuler = new Vector3(targetPitchX, baseAngleY, targetRollZ);
+            Quaternion finalTargetRotation = Quaternion.Euler(combinedEuler);
+
+            // 求めた最終的な目標角度へ、スムーズに回転させる
             transform.rotation = Quaternion.Slerp(
                 transform.rotation, 
-                targetRotation, 
+                finalTargetRotation, 
                 Time.deltaTime * rotationSpeed
             );
         }
