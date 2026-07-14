@@ -34,7 +34,7 @@ public class RingTargetManager : MonoBehaviour
         }
     }
 
-    void RandomizeHeights()
+    private void RandomizeHeights()
     {
         // リストが空の場合はエラーを防ぐために処理をスキップ
         if (targetChildren == null || targetChildren.Count == 0) return;

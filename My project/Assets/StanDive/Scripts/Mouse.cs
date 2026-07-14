@@ -8,13 +8,13 @@ public class MouseBehaviourScript : MonoBehaviour
 
             // 可動域
     [SerializeField]
-    float maxUpAngle = 60f;
+    float maxUpAngle = 60f + 10f;
 
     [SerializeField]
-    float maxDownAngle = 70f;
+    float maxDownAngle = 70f + 10f;
 
     [SerializeField]
-    float maxHorizontalAngle = 80f;
+    float maxHorizontalAngle = 80f + 10f;
 
     void Start()
     {
@@ -34,10 +34,10 @@ public class MouseBehaviourScript : MonoBehaviour
         yRot += v;
 
         // 上下制限
-        //xRot = Mathf.Clamp(xRot, -maxUpAngle, maxDownAngle);
+        xRot = Mathf.Clamp(xRot, -maxUpAngle, maxDownAngle);
 
         // 左右制限
-        //yRot = Mathf.Clamp(yRot, -maxHorizontalAngle, maxHorizontalAngle);
+        yRot = Mathf.Clamp(yRot, -maxHorizontalAngle, maxHorizontalAngle);
 
         transform.rotation = Quaternion.Euler(xRot, yRot, 0);
     }
