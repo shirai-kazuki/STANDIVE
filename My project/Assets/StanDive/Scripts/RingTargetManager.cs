@@ -13,6 +13,8 @@ public class RingTargetManager : MonoBehaviour
     // 現在計測中の時間を記録する変数（インスペクターで確認可能）
     [SerializeField] private float currentTimer = 0f;
 
+    public Playermanager playermanager; 
+
     void Start()
     {
         RandomizeHeights();
@@ -20,16 +22,25 @@ public class RingTargetManager : MonoBehaviour
 
     void Update()
     {
-        // 1. 前のフレームからの経過時間を足していく
+        // 前のフレームからの経過時間を足していく
         currentTimer += Time.deltaTime;
 
-        // 2. 計測時間が設定した秒数（5秒）を超えたかチェック
+        // パラシュートが開いたらすぐに変える
+        if (playermanager.GetIsParachute())
+        {
+            RandomizeHeights();
+            // タイマーをリセット（0に戻す）
+            currentTimer = 0f;
+            return;
+        }
+
+        // 計測時間が設定した秒数（5秒）を超えたかチェック
         if (currentTimer >= intervalSeconds)
         {
             // 高さをランダムに変える処理を実行
             RandomizeHeights();
 
-            // 3. タイマーをリセット（0に戻す）
+            // タイマーをリセット（0に戻す）
             currentTimer = 0f;
         }
     }
@@ -45,13 +56,13 @@ public class RingTargetManager : MonoBehaviour
             if (childTransform == null) continue; // 空のスロット対策
 
             Vector3 pos = childTransform.position;
-            if(transform.position.y > 300f)
+            if(playermanager.GetIsParachute())
             {
-                pos.y = transform.position.y + Random.Range(minHeight, maxHeight) - 10f;
+                pos.y = transform.position.y;
             }
             else
             {
-                pos.y = 600f;
+                pos.y = transform.position.y + Random.Range(minHeight, maxHeight) - 10f;
             }
             
             childTransform.position = pos;

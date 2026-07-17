@@ -7,6 +7,8 @@ public class NPCOrientationHandler : MonoBehaviour
 
     private Rigidbody rb;  // PlayerのRigidbodyコンポーネントを保存する変数
 
+    public Playermanager playermanager; 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -38,7 +40,14 @@ public class NPCOrientationHandler : MonoBehaviour
             RingNPCmanager manager = npc.GetComponent<RingNPCmanager>();
             if (manager != null)
             {
-                manager.SetRoll(targetZ); // ★ここで横の角度をセット！
+                if (playermanager.GetIsParachute())
+                {
+                    manager.SetRoll(0f);
+                }
+                else
+                {
+                    manager.SetRoll(targetZ); // ★ここで横の角度をセット！
+                }
             }
         }
     }

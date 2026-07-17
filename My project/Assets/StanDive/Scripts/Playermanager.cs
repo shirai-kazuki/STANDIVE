@@ -18,6 +18,7 @@ public class Playermanager : MonoBehaviour
     private bool isHandWave = false;// 手を振ったかどうかを保存する変数
     private bool isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
     private bool isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
+    public bool isParachute = false;// パラシュートが開いたかどうかを保存する変数
     [Header("傾きの設定")]
     public float tiltSpeed = 60f; // 1秒間に傾く度数
     private Quaternion tiltUp;
@@ -27,21 +28,28 @@ public class Playermanager : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        //空気抵抗を0.1にする
+        
+        // 新Unity(2022以降)での空気抵抗の設定
         rb.linearDamping = 0.1f; 
-        //初期の高さを保存
+        
+        // 初期の高さを保存
         height = transform.position.y;
         downheight = height - 3200f;
 
-        rb.maxAngularVelocity = 1000f; // ブレーキ解除
+        // 安全な回転速度の制限（Unityのデフォルト、または少し早めの 20 前後が安全です）
+        rb.maxAngularVelocity = 20f; 
 
-        // ゲーム開始時に、角度のデータを1度だけ作って保存しておく（エコ！）
+        // スピード系変数がインスペクターで0のままだった場合の安全装置（初期値を代入）
+        if (horizontalSpeed == 0) horizontalSpeed = 10f;
+
+        // ゲーム開始時に角度のデータを作っておく
         tiltUp = Quaternion.Euler(30f, 0f, 0f);
         tiltDown = Quaternion.Euler(0f, 0f, 0f);
 
-        // 1. 保存しておいた角度から、どちらを目指すか「選ぶ」だけで済むようにする
+        // 最初の目指す角度を安全に設定
         targetRotation = tiltUp;
     }
+
     private void FixedUpdate()
     {
         // 今の番号に合わせて、実行する処理を毎フレーム切り替える
@@ -79,27 +87,58 @@ public class Playermanager : MonoBehaviour
         }
     }
 
-    // 手のポーズから左右の速度を計算する処理
+        // 手のポーズから左右の速度を計算する処理（VR専用・安全版）
     private void CalculateMovement()
     {
-        // 左手と右手の高さの差を計算
+        // 1. 左手と右手の高さの差を計算
         heightDifference = Mathf.Abs(leftHandHeight - rightHandHeight);
 
-        // 上下の速度を計算（高さの差が大きいほど速くなる）
+        // 2. 【安全装置】もし差がほぼ0（VR未接続や直立不動）なら、速度を0にして計算を終了する
+        // これにより、この後の割り算で「0によるエラー」が起きるのを完全に防ぎます
+        if (heightDifference < 0.001f)
+        {
+            horizontalSpeed = 0f;
+            return;
+        }
+
+        // 3. 上下の速度を計算（高さの差が大きいほど速くなる）
         horizontalSpeed = Mathf.Clamp(heightDifference / 0.1f * maxhorizontalSpeed, 0f, maxhorizontalSpeed);
     }
 
-    // プレイヤーを移動させる関数
+        // プレイヤーを移動させる関数（VRゴーグル専用・安全版）
     private void MovePlayer()
     {
-        // Y軸のみ「-fallSpeed」で固定し、XとZの速度は現在の状態を維持する
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, -fallSpeed, rb.linearVelocity.z);
-
+        // 1. 現在の手の高さから左右の移動速度を計算
         CalculateMovement();
+
+        Vector3 forceDirection = Vector3.zero;
+
+        // 右に進む（左手が右手よりも高い場合）
+        if (leftHandHeight > rightHandHeight)
+        {
+            forceDirection += transform.right;
+        }
+        // 左に進む（右手が左手よりも高い場合）
+        if (rightHandHeight > leftHandHeight)
+        {
+            forceDirection -= transform.right;
+        }
+
+        // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
+        if (forceDirection != Vector3.zero && horizontalSpeed > 0f)
+        {
+            rb.AddForce(forceDirection * horizontalSpeed);
+        }
+
+
+        // 2. 高さに応じた前進（Z軸）と落下（Y軸）の速度計算
+        float targetVelocityZ = rb.linearVelocity.z; // 現在のZ速度をキープ
+
         if (transform.position.y >= height)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, 30f); ; // 常に正面に飛び出す
-        }else
+            targetVelocityZ = 30f; // 常に正面に飛び出す
+        }
+        else
         {
             TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
             fallSpeed = 30f;
@@ -107,24 +146,27 @@ public class Playermanager : MonoBehaviour
 
         if (transform.position.y < height - 10f)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, 0f); ; // 前に移動しないようにする
+            targetVelocityZ = 0f; // 前に移動しないようにする
         }
 
-        //右に進む
-        if (leftHandHeight > rightHandHeight) // 左手が右手よりも高い場合
+
+        // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
+        // 【最重要】ゴーグル未接続時に rb.linearVelocity.x が「計算不能(NaN)」になるバグを防ぐため、
+        // 値が正常（float型の範囲内）であるかチェックする安全装置を挟みます。
+        float targetVelocityX = rb.linearVelocity.x;
+        if (float.IsNaN(targetVelocityX) || float.IsInfinity(targetVelocityX))
         {
-            rb.AddForce(transform.right * horizontalSpeed);
+            targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
         }
-        //左に進む
-        if (rightHandHeight > leftHandHeight) // 右手が左手よりも高い場合
-        {
-            rb.AddForce(-transform.right * horizontalSpeed);
-        }
+
+        // 綺麗になった速度を代入（これで絶対にフリーズしません）
+        rb.linearVelocity = new Vector3(targetVelocityX, -fallSpeed, targetVelocityZ);
     }
+
 
     private void TiltPlayer()
     {   
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown) 
+        if (isParachute) 
         {
             targetRotation = tiltDown;
         }
@@ -176,6 +218,11 @@ public class Playermanager : MonoBehaviour
         return transform.position;
     }
 
+    public bool GetIsParachute()
+    {
+        return isParachute;
+    }
+
     public void FirstProcess()
     {
         //最初の処理
@@ -214,11 +261,17 @@ public class Playermanager : MonoBehaviour
         // 左手と右手が両方とも下に動いたかを確認
         if (transform.position.y < downheight && isLeftHandDown && isRightHandDown)
         {
+            // パラシュートが開いた状態であることにする
+            isParachute = true;
+        }
+
+        if (isParachute)
+        {
             // 子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
             // 子オブジェクトを非アクティブにする
             DeactivateChildByName("WindPressure");
-   
+
             //速度を落とす
             fallSpeed = 5f;
         }

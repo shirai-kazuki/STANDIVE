@@ -11,6 +11,8 @@ public class RingNPCmanager : MonoBehaviour
     private float rotationSpeed = 10f; 
     private Vector3 targetPosition;
 
+    public Playermanager playermanager; 
+
     // -------------------------------------------------------------
     // ★新しく追加：前後の傾き（X）と左右の傾き（Z）を個別に保存する変数
     // -------------------------------------------------------------
@@ -50,9 +52,10 @@ public class RingNPCmanager : MonoBehaviour
         {
             Vector3 targetPosition = target.position;
 
-            if(transform.position.y < 300f)
+            if(playermanager.GetIsParachute())
             {
                 speed = 25f;
+                ActiveChildByName("Parachute");
             }
 
             if(target.position.y < 3400f)
@@ -76,6 +79,12 @@ public class RingNPCmanager : MonoBehaviour
                 SetPitch(startRotation.eulerAngles.x + 90f);
             }
 
+            if (playermanager.GetIsParachute())
+            {
+                // 移動中：初期のX角度から90度起こす（関数を使ってセット）
+                SetPitch(startRotation.eulerAngles.x - 90f);
+            }
+
             // -------------------------------------------------------------
             // ★セットされた変数（targetPitchX, targetRollZ）から最終的な角度を求める
             // -------------------------------------------------------------
@@ -89,6 +98,15 @@ public class RingNPCmanager : MonoBehaviour
                 finalTargetRotation, 
                 Time.deltaTime * rotationSpeed
             );
+        }
+    }
+
+    private void ActiveChildByName(string targetName)
+    {
+        Transform child = transform.Find(targetName);
+        if (!child.gameObject.activeSelf)
+        {
+            child.gameObject.SetActive(true);
         }
     }
 }
