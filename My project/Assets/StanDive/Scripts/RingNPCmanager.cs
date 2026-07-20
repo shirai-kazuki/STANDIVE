@@ -11,7 +11,8 @@ public class RingNPCmanager : MonoBehaviour
     private float rotationSpeed = 10f; 
     private Vector3 targetPosition;
 
-    public Playermanager playermanager; 
+    public Playermanager playermanager;
+    [SerializeField] private MonoBehaviour targetScript;
 
     // -------------------------------------------------------------
     // ★新しく追加：前後の傾き（X）と左右の傾き（Z）を個別に保存する変数
@@ -22,7 +23,7 @@ public class RingNPCmanager : MonoBehaviour
 
     void Start()
     {
-        startRotation = transform.rotation;
+        startRotation = Quaternion.Euler(0f, 0f, 0f);
         
         // 初期状態の各軸の角度を記憶しておく
         targetPitchX = startRotation.eulerAngles.x;
@@ -52,13 +53,12 @@ public class RingNPCmanager : MonoBehaviour
         {
             Vector3 targetPosition = target.position;
 
-            if(playermanager.GetIsParachute())
+            // パラシュートが開いているときは即座に移動する
+            if (playermanager.GetIsParachute())
             {
-                speed = 25f;
-                ActiveChildByName("Parachute");
+                transform.position = target.position;
             }
-
-            if(target.position.y < 3400f)
+            else if(target.position.y < 3400f)
             {
                 float step = speed * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
@@ -77,12 +77,6 @@ public class RingNPCmanager : MonoBehaviour
             {
                 // 移動中：初期のX角度から90度倒す（関数を使ってセット）
                 SetPitch(startRotation.eulerAngles.x + 90f);
-            }
-
-            if (playermanager.GetIsParachute())
-            {
-                // 移動中：初期のX角度から90度起こす（関数を使ってセット）
-                SetPitch(startRotation.eulerAngles.x - 90f);
             }
 
             // -------------------------------------------------------------
@@ -108,5 +102,24 @@ public class RingNPCmanager : MonoBehaviour
         {
             child.gameObject.SetActive(true);
         }
+    }
+
+    public void SetParForm()
+    {
+        // 親オブジェクトと同じ位置（親から見て 0, 0, 0）にリセットする
+        transform.localPosition = Vector3.zero;
+        // 初期のX角度から90度起こす（関数を使ってセット）
+        transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+        ActiveChildByName("Parachute");
+        // 名前で指定してリセット
+        Transform childByName = transform.Find("NPC/Skeleton/Hips/Spine/Chest/UpperChest/Neck/Head");
+        if (childByName != null)
+        {
+            childByName.localRotation = Quaternion.identity;
+        }
+        // スクリプトをアクティブ（有効化）にする
+        targetScript.enabled = true;
+        // 自分自身のスクリプト（コンポーネント）を無効にする
+        this.enabled = false;
     }
 }

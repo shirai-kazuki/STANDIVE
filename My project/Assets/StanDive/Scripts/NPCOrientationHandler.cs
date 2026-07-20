@@ -3,15 +3,20 @@ using UnityEngine;
 
 public class NPCOrientationHandler : MonoBehaviour
 {
-    [SerializeField] private List<Transform> NPCs = new List<Transform>();
+    private List<Transform> NPCs;
+    [SerializeField] private List<Transform> NPCsbef = new List<Transform>();
+    [SerializeField] private List<Transform> NPCsaft = new List<Transform>();
 
     private Rigidbody rb;  // PlayerのRigidbodyコンポーネントを保存する変数
 
     public Playermanager playermanager; 
 
+    private bool isOriParachute = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        NPCs = NPCsbef;
     }
 
     void Update()
@@ -40,15 +45,22 @@ public class NPCOrientationHandler : MonoBehaviour
             RingNPCmanager manager = npc.GetComponent<RingNPCmanager>();
             if (manager != null)
             {
-                if (playermanager.GetIsParachute())
+                if (playermanager.GetIsParachute() && !isOriParachute)
                 {
                     manager.SetRoll(0f);
+                    manager.SetParForm();
                 }
                 else
                 {
                     manager.SetRoll(targetZ); // ★ここで横の角度をセット！
                 }
             }
+        }
+
+        if(playermanager.GetIsParachute() && !isOriParachute)
+        {
+            isOriParachute = true;
+            NPCs = NPCsaft;
         }
     }
 }
