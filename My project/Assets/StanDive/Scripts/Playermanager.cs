@@ -15,7 +15,7 @@ public class Playermanager : MonoBehaviour
     public float rightHandHeight;
     public Transform target; // 目的地のTransformを保存する変数
     public float arrivalThreshold = 0.1f; // 到達とみなす距離
-    private bool isHandWave = false;// 手を振ったかどうかを保存する変数
+    public bool isHandWave = false;// 手を振ったかどうかを保存する変数
     private bool isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
     private bool isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
     public bool isParachute = false;// パラシュートが開いたかどうかを保存する変数
@@ -24,6 +24,9 @@ public class Playermanager : MonoBehaviour
     private Quaternion tiltUp;
     private Quaternion tiltDown;
     private Quaternion targetRotation;
+    public AudioSource audioSource;
+    public AudioClip loopClip; // ループ用（BGMなど）
+    public AudioClip oneShotClip; // 1回用（SEなど）
 
     private void Start()
     {
@@ -183,6 +186,27 @@ public class Playermanager : MonoBehaviour
         rb.MoveRotation(nextRotation);
     }
 
+    // 1. ループ再生する（BGM向け）
+    public void PlayLoop()
+    {
+        audioSource.clip = loopClip;
+        audioSource.loop = true; // ループを有効にする
+        audioSource.Play();
+    }
+
+    // 2. 1回だけ再生する（SE向け：重なり可能）
+    public void PlayOneShot()
+    {
+        // loop設定に関係なく1回だけ再生
+        audioSource.PlayOneShot(oneShotClip, 1f); // 1fは音量の倍率（0.0～1.0）
+    }
+
+    // 3. ループを止める
+    public void StopLoop()
+    {
+        audioSource.Stop();
+    }
+
     // 左手用の高さをセットするための関数
     public void SetLeftHeight(float height)
     {
@@ -244,6 +268,7 @@ public class Playermanager : MonoBehaviour
     {
         //2番目の処理
         if(isHandWave){
+            PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
         }
     }
@@ -267,6 +292,8 @@ public class Playermanager : MonoBehaviour
 
         if (isParachute)
         {
+            // ここでループ音の音量を小さくする（0.0 〜 1.0 の間で指定。例は 0.2）
+            audioSource.volume = 0.2f; 
             // 子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
             // 子オブジェクトを非アクティブにする
@@ -274,6 +301,14 @@ public class Playermanager : MonoBehaviour
 
             //速度を落とす
             fallSpeed = 5f;
+        }
+
+        if(transform.position.y < 1f)
+        {
+            // 着地したする
+            StopLoop(); // ループ再生を停止
+            PlayOneShot(); // 1回再生を開始
+            progressStep = 3; // 次の処理に進む
         }
     }
 
