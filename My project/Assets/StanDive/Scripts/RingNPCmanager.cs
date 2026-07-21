@@ -8,7 +8,7 @@ public class RingNPCmanager : MonoBehaviour
     private float arrivalThreshold = 0f; 
     private Quaternion startRotation;
     
-    private float rotationSpeed = 10f; 
+    private float rotationSpeed = 1f; 
     private Vector3 targetPosition;
 
     public Playermanager playermanager;
