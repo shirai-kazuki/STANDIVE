@@ -8,9 +8,12 @@ public class NPCmanager : MonoBehaviour
     private bool isdiving = false;
     // インスペクターで対象のスクリプトを指定する
     [SerializeField] private MonoBehaviour targetScript;
+    private Animator animator;
+    public bool isNext = false;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         //初期の高さを保存
         height = transform.position.y;
@@ -18,6 +21,16 @@ public class NPCmanager : MonoBehaviour
 
     void Update()
     {
+        // 例：スペースキーを押したら次へ進むフラグを真にする
+        /*if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isNext = true;
+        }*/
+        if (isNext)
+        {
+            animator.SetBool("isNext", true);
+        }
+
         if (isdiving)
         {
             Move();
