@@ -40966,6 +40966,7 @@ GameObject:
   - component: {fileID: 8741288696655867072}
   - component: {fileID: 8992999914322155546}
   - component: {fileID: 201407590788425470}
+  - component: {fileID: 8992999914322155547}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -49744,7 +49745,7 @@ Terrain:
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
-  m_SplatMapDistance: 1000
+  m_SplatMapDistance: 250
   m_HeightmapMinimumLODSimplification: 0
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
@@ -49767,6 +49768,26 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
+--- !u!114 &8992999914322155547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135470910463595896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aedc84b85eac11b45ae8bde6db4350f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicTerrainTiling
+  targetTerrain: {fileID: 8992999914322155546}
+  playerTransform: {fileID: 1166901044}
+  textureIndex: 0
+  minDistance: 5
+  maxDistance: 3000
+  minTileSize: 5
+  maxTileSize: 1000
+  sizeStep: 200
 --- !u!4 &8995433419455981771
 Transform:
   m_ObjectHideFlags: 0
