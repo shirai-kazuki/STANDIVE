@@ -144,7 +144,6 @@ public class Playermanager : MonoBehaviour
         else
         {
             TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
-            fallSpeed = 30f;
         }
 
         if (transform.position.y < height - 10f)
@@ -300,7 +299,11 @@ public class Playermanager : MonoBehaviour
             DeactivateChildByName("WindPressure");
 
             //速度を落とす
-            fallSpeed = 5f;
+            fallSpeed = 10f;
+        }
+        else
+        {
+            fallSpeed = 30f;
         }
 
         if(transform.position.y < 1f)

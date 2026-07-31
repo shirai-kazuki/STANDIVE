@@ -1,3 +1,4 @@
+using UnityEngine.InputSystem;
 using UnityEngine;
 
 public class NPCmanager : MonoBehaviour
@@ -22,10 +23,10 @@ public class NPCmanager : MonoBehaviour
     void Update()
     {
         // 例：スペースキーを押したら次へ進むフラグを真にする
-        /*if (Input.GetKeyDown(KeyCode.Space))
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             isNext = true;
-        }*/
+        }
         if (isNext)
         {
             animator.SetBool("isNext", true);
