@@ -2,36 +2,31 @@ using UnityEngine;
 
 public class RopeAttacher : MonoBehaviour
 {
-    // インスペクターで「RightHandAnchor」などを指定
-    public Transform targetHandAnchor; 
+    // インスペクターで手のオブジェクトを登録
+    public Transform targetHand;
+
+    // 【調整ポイント】手首と手のひらのズレを考慮して、20cm（0.2f）に広げました
+    public float attachDistance = 0.2f;
+
     private bool isAttached = false;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (isAttached) return;
-
-        // 手のアンカー（またはその子オブジェクト）にぶつかったら
-        if (other.transform == targetHandAnchor || other.transform.IsChildOf(targetHandAnchor))
-        {
-            isAttached = true;
-
-            // 物理挙動がついていれば無効化して動きを止める
-            if (TryGetComponent<Rigidbody>(out Rigidbody rb))
-            {
-                rb.isKinematic = true;
-            }
-        }
-    }
 
     void Update()
     {
         if (isAttached)
         {
-            // 位置は手のひらの中心にぴったり合わせる
-            transform.position = targetHandAnchor.position;
-            
-            // 角度は世界の真上（回転なし：0, 0, 0）に固定し続ける
+            // 合体後は手の位置に完全同期（角度は真上のまま固定）
+            transform.position = targetHand.position;
             transform.rotation = Quaternion.identity;
+            return; // 合体済みならこれ以降の処理（距離計算）はスキップ
+        }
+
+        // 手の「中心点」とキューブの距離を計算
+        float distance = Vector3.Distance(transform.position, targetHand.position);
+
+        // 範囲内に入ったら一瞬で合体
+        if (distance <= attachDistance)
+        {
+            isAttached = true;
         }
     }
 }

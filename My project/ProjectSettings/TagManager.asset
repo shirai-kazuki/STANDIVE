@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Ring
+  - Hand
   layers:
   - Default
   - TransparentFX
