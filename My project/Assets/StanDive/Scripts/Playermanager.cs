@@ -295,6 +295,7 @@ public class Playermanager : MonoBehaviour
             audioSource.volume = 0.2f; 
             // 子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
+            ActiveChildByName("Rope");
             // 子オブジェクトを非アクティブにする
             DeactivateChildByName("WindPressure");
 
