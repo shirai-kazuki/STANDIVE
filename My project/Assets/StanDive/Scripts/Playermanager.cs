@@ -28,6 +28,10 @@ public class Playermanager : MonoBehaviour
     public AudioClip loopClip; // ループ用（BGMなど）
     public AudioClip oneShotClip; // 1回用（SEなど）
 
+    //ハードウェア追加部分
+    private Hardware hardware;
+    private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -51,6 +55,9 @@ public class Playermanager : MonoBehaviour
 
         // 最初の目指す角度を安全に設定
         targetRotation = tiltUp;
+
+        //ハードウェア追加部分
+        hardware = FindAnyObjectByType<Hardware>();
     }
 
     private void FixedUpdate()
@@ -120,11 +127,33 @@ public class Playermanager : MonoBehaviour
         if (leftHandHeight > rightHandHeight)
         {
             forceDirection += transform.right;
+
+            //ハードウェア追加部分
+            if (lastMoveDirection != 1)
+            {
+                if (hardware != null)
+                {
+                    hardware.MoveRight();
+                }
+
+                lastMoveDirection = 1;
+            }
         }
         // 左に進む（右手が左手よりも高い場合）
         if (rightHandHeight > leftHandHeight)
         {
             forceDirection -= transform.right;
+
+            //ハードウェア追加部分
+            if (lastMoveDirection != -1)
+            {
+                if (hardware != null)
+                {
+                    hardware.MoveLeft();
+                }
+
+                lastMoveDirection = -1;
+            }
         }
 
         // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
@@ -270,6 +299,12 @@ public class Playermanager : MonoBehaviour
         {
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
+
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.MoveJampingOut();
+            }
         }
     }
 
@@ -303,6 +338,12 @@ public class Playermanager : MonoBehaviour
 
             //速度を落とす
             fallSpeed = 10f;
+
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.MoveParachute();
+            }
         }
         else
         {
