@@ -31,16 +31,16 @@ public class Playermanager : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
+
         // 新Unity(2022以降)での空気抵抗の設定
-        rb.linearDamping = 0.1f; 
-        
+        rb.linearDamping = 0.1f;
+
         // 初期の高さを保存
         height = transform.position.y;
         downheight = height - 3200f;
 
         // 安全な回転速度の制限（Unityのデフォルト、または少し早めの 20 前後が安全です）
-        rb.maxAngularVelocity = 20f; 
+        rb.maxAngularVelocity = 20f;
 
         // スピード系変数がインスペクターで0のままだった場合の安全装置（初期値を代入）
         if (horizontalSpeed == 0) horizontalSpeed = 10f;
@@ -90,7 +90,7 @@ public class Playermanager : MonoBehaviour
         }
     }
 
-        // 手のポーズから左右の速度を計算する処理（VR専用・安全版）
+    // 手のポーズから左右の速度を計算する処理（VR専用・安全版）
     private void CalculateMovement()
     {
         // 1. 左手と右手の高さの差を計算
@@ -108,7 +108,7 @@ public class Playermanager : MonoBehaviour
         horizontalSpeed = Mathf.Clamp(heightDifference / 0.1f * maxhorizontalSpeed, 0f, maxhorizontalSpeed);
     }
 
-        // プレイヤーを移動させる関数（VRゴーグル専用・安全版）
+    // プレイヤーを移動させる関数（VRゴーグル専用・安全版）
     private void MovePlayer()
     {
         // 1. 現在の手の高さから左右の移動速度を計算
@@ -167,8 +167,8 @@ public class Playermanager : MonoBehaviour
 
 
     private void TiltPlayer()
-    {   
-        if (isParachute) 
+    {
+        if (isParachute)
         {
             targetRotation = tiltDown;
         }
@@ -176,8 +176,8 @@ public class Playermanager : MonoBehaviour
         // 2. RotateTowardsに戻すことで、最初から最後まで「等速」で動かします
         // FixedUpdateの中なので、Time.fixedDeltaTimeを掛け算するのが一番正確です
         Quaternion nextRotation = Quaternion.RotateTowards(
-            rb.rotation, 
-            targetRotation, 
+            rb.rotation,
+            targetRotation,
             tiltSpeed * Time.fixedDeltaTime
         );
 
@@ -266,7 +266,8 @@ public class Playermanager : MonoBehaviour
     public void SecondProcess()
     {
         //2番目の処理
-        if(isHandWave){
+        if (isHandWave)
+        {
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
         }
@@ -277,7 +278,8 @@ public class Playermanager : MonoBehaviour
         //3番目の処理
         MovePlayer();
 
-        if(transform.position.y > downheight){
+        if (transform.position.y > downheight)
+        {
             isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
             isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
         }
@@ -292,7 +294,7 @@ public class Playermanager : MonoBehaviour
         if (isParachute)
         {
             // ここでループ音の音量を小さくする（0.0 〜 1.0 の間で指定。例は 0.2）
-            audioSource.volume = 0.2f; 
+            audioSource.volume = 0.2f;
             // 子オブジェクトをアクティブにする
             ActiveChildByName("Parachute");
             ActiveChildByName("Rope");
@@ -307,7 +309,7 @@ public class Playermanager : MonoBehaviour
             fallSpeed = 30f;
         }
 
-        if(transform.position.y < 1f)
+        if (transform.position.y < 1f)
         {
             // 着地したする
             StopLoop(); // ループ再生を停止
