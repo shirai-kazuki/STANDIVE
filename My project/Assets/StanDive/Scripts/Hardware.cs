@@ -24,7 +24,7 @@ public class Hardware : MonoBehaviour
 
     void Start()
     {
-        serial = new SerialPort("COM5", 115200);
+        serial = new SerialPort("COM3", 115200);
         serial.Open();
 
     }
@@ -32,7 +32,7 @@ public class Hardware : MonoBehaviour
     void Update()
     {
         //アクチュエータ
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current.mKey.wasPressedThisFrame)
         {
             CancelAutoMove();
             currentRoutine = StartCoroutine(MoveToStop("AB_Up", 3.0f, 0, "AB_Up_Slow"));
@@ -88,16 +88,16 @@ public class Hardware : MonoBehaviour
     public void MoveRight()
     {
         CancelAutoMove();
-        float limit = maxMove + currentPosition;
-        currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", limit, -1, "A_Up_B_Down_Slow"));
+        float limit = maxMove - currentPosition;
+        currentRoutine = StartCoroutine(MoveToStop("B_Up_A_Down", limit, 1, "B_Up_A_Down_Slow"));
     }
 
     //左移動
     public void MoveLeft()
     {
         CancelAutoMove();
-        float limit = maxMove - currentPosition;
-        currentRoutine = StartCoroutine(MoveToStop("B_Up_A_Down", limit, 1, "B_Up_A_Down_Slow"));
+        float limit = maxMove + currentPosition;
+        currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", limit, -1, "A_Up_B_Down_Slow"));
     }
 
     //パラシュート
