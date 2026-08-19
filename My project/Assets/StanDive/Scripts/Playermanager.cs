@@ -128,7 +128,7 @@ public class Playermanager : MonoBehaviour
         }
 
         // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
-        if (forceDirection != Vector3.zero && horizontalSpeed > 0f)
+        if (forceDirection != Vector3.zero && horizontalSpeed > 0f && transform.position.y > height - 3400f)
         {
             rb.AddForce(forceDirection * horizontalSpeed);
         }
@@ -151,7 +151,6 @@ public class Playermanager : MonoBehaviour
             targetVelocityZ = 0f; // 前に移動しないようにする
         }
 
-
         // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
         // 【最重要】ゴーグル未接続時に rb.linearVelocity.x が「計算不能(NaN)」になるバグを防ぐため、
         // 値が正常（float型の範囲内）であるかチェックする安全装置を挟みます。
@@ -159,6 +158,21 @@ public class Playermanager : MonoBehaviour
         if (float.IsNaN(targetVelocityX) || float.IsInfinity(targetVelocityX))
         {
             targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
+        }
+
+        if (transform.position.y < height - 3400f)
+        {
+            targetVelocityX = 0f; // 横に移動しないようにする
+        }
+        
+        if (targetVelocityX > 50f)
+        {
+            targetVelocityX = 50f; // 横移動の速度が50を超えないように制限
+        }
+
+        if (targetVelocityX < -50f)
+        {
+            targetVelocityX = -50f; // 横移動の速度が-50を下回らないように制限
         }
 
         // 綺麗になった速度を代入（これで絶対にフリーズしません）
@@ -285,7 +299,7 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < height - 3400f)
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
