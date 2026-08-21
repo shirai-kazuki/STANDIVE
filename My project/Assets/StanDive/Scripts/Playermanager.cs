@@ -330,7 +330,11 @@ public class Playermanager : MonoBehaviour
             DeactivateChildByName("WindPressure");
 
             //速度を落とす
-            fallSpeed = 10f;
+            if (fallSpeed > 10f)
+            {
+                fallSpeed -= 5f * Time.deltaTime; // 徐々に落下速度を落とす
+
+            }
         }
         else
         {
