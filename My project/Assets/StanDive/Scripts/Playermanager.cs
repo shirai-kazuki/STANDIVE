@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public class Playermanager : MonoBehaviour
 {
     private Rigidbody rb;  // プレイヤーのRigidbodyコンポーネントを保存する変数
-    private float maxhorizontalSpeed = 15f;// プレイヤーの最大横移動速度を保存する変数
+    private float maxhorizontalSpeed = 15f;// プレイヤーの最大横移動加速度を保存する変数
+    private float maxSpeed = 50f;// プレイヤーの最大横移動速度を保存する変数
     private float fallSpeed = 1f;// プレイヤーの落下速度を保存する変数
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
@@ -27,6 +28,8 @@ public class Playermanager : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip loopClip; // ループ用（BGMなど）
     public AudioClip oneShotClip; // 1回用（SEなど）
+    private float currentTimer = 0f; //時間を計測するためのタイマー変数
+    private float staytTime = 3f; //待ち時間の変数
 
     private void Start()
     {
@@ -111,18 +114,23 @@ public class Playermanager : MonoBehaviour
     // プレイヤーを移動させる関数（VRゴーグル専用・安全版）
     private void MovePlayer()
     {
+        if(currentTimer < staytTime)
+        {
+            currentTimer += Time.fixedDeltaTime;
+        }
+
         // 1. 現在の手の高さから左右の移動速度を計算
         CalculateMovement();
 
         Vector3 forceDirection = Vector3.zero;
 
         // 右に進む（左手が右手よりも高い場合）
-        if (leftHandHeight > rightHandHeight)
+        if (leftHandHeight > rightHandHeight && currentTimer >= staytTime)
         {
             forceDirection += transform.right;
         }
         // 左に進む（右手が左手よりも高い場合）
-        if (rightHandHeight > leftHandHeight)
+        if (rightHandHeight > leftHandHeight && currentTimer >= staytTime)
         {
             forceDirection -= transform.right;
         }
@@ -165,14 +173,14 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 横に移動しないようにする
         }
         
-        if (targetVelocityX > 50f)
+        if (targetVelocityX > maxSpeed)
         {
-            targetVelocityX = 50f; // 横移動の速度が50を超えないように制限
+            targetVelocityX = maxSpeed; // 横移動の速度がmaxSpeedを超えないように制限
         }
 
-        if (targetVelocityX < -50f)
+        if (targetVelocityX < -maxSpeed)
         {
-            targetVelocityX = -50f; // 横移動の速度が-50を下回らないように制限
+            targetVelocityX = -maxSpeed; // 横移動の速度が-maxSpeedを下回らないように制限
         }
 
         // 綺麗になった速度を代入（これで絶対にフリーズしません）
