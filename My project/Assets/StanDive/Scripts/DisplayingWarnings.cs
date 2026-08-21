@@ -17,7 +17,7 @@ public class DisplayingWarnings : MonoBehaviour
         Vector3 playerPosition = transform.position;
 
         // ここで警告を表示する条件を設定（例: y座標が特定の値以下の場合）
-        if (playerPosition.y < 300f && !playermanager.isParachute) // 300未満で警告表示
+        if (playerPosition.y < playermanager.GetDownheight() && !playermanager.GetIsParachute()) // Downheight未満で警告表示
         {
             warningPanel.SetActive(true); // 警告パネルを表示
         }
