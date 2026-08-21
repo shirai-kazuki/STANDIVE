@@ -62,7 +62,7 @@ public class RingTargetManager : MonoBehaviour
             }
             else
             {
-                pos.y = transform.position.y + Random.Range(minHeight, maxHeight) - 10f;
+                pos.y = transform.position.y + Random.Range(minHeight, maxHeight) - 15f;
             }
             
             childTransform.position = pos;
