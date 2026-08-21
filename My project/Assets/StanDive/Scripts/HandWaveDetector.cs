@@ -3,9 +3,9 @@ using UnityEngine;
 public class HandWaveDetector : MonoBehaviour
 {
     [Header("設定値（調整用）")]
-    public float waveSpeedThreshold = 0.5f; // 手を振る速さの基準
+    public float waveSpeedThreshold = 0.1f; // 手を振る速さの基準
     public int requiredWaveCount = 3;       // 何回往復したら「手を振った」とするか
-    public float waveTimeout = 1.0f;        // 制限時間（この時間内に振り切る）
+    public float waveTimeout = 5.0f;        // 制限時間（この時間内に振り切る）
 
     public Playermanager playermanager; 
 

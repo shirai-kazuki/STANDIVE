@@ -40,7 +40,7 @@ public class Playermanager : MonoBehaviour
 
         // 初期の高さを保存
         height = transform.position.y;
-        downheight = height - 3200f;
+        downheight = height - 2900f;
 
         // 安全な回転速度の制限（Unityのデフォルト、または少し早めの 20 前後が安全です）
         rb.maxAngularVelocity = 20f;
@@ -49,7 +49,7 @@ public class Playermanager : MonoBehaviour
         if (horizontalSpeed == 0) horizontalSpeed = 10f;
 
         // ゲーム開始時に角度のデータを作っておく
-        tiltUp = Quaternion.Euler(30f, 0f, 0f);
+        tiltUp = Quaternion.Euler(35f, 0f, 0f);
         tiltDown = Quaternion.Euler(0f, 0f, 0f);
 
         // 最初の目指す角度を安全に設定
@@ -168,7 +168,7 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
         }
 
-        if (transform.position.y < 100f)
+        if (transform.position.y < 50f)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
         }
@@ -312,10 +312,11 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < 100f)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < 200f)
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
+            maxSpeed = 10f;
         }
 
         if (isParachute)
