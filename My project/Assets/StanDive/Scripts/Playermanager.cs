@@ -10,7 +10,7 @@ public class Playermanager : MonoBehaviour
     private float horizontalSpeed;// プレイヤーの横移動の速度を保存する変数
     private float heightDifference;// 左手と右手の高さの差を保存する変数
     private float height;// プレイヤーの初期の高さを保存する変数
-    private float downheight;// パラシュート展開の高さを保存する変数
+    private float downheight = 0f;// パラシュート展開の高さを保存する変数
     public int progressStep = 0; // 進行状況を管理する変数
     public float leftHandHeight;// 左手と右手の高さを保存する変数
     public float rightHandHeight;
@@ -40,7 +40,7 @@ public class Playermanager : MonoBehaviour
 
         // 初期の高さを保存
         height = transform.position.y;
-        downheight = height - 3200f;
+        downheight = height - 2900f;
 
         // 安全な回転速度の制限（Unityのデフォルト、または少し早めの 20 前後が安全です）
         rb.maxAngularVelocity = 20f;
@@ -49,7 +49,7 @@ public class Playermanager : MonoBehaviour
         if (horizontalSpeed == 0) horizontalSpeed = 10f;
 
         // ゲーム開始時に角度のデータを作っておく
-        tiltUp = Quaternion.Euler(30f, 0f, 0f);
+        tiltUp = Quaternion.Euler(35f, 0f, 0f);
         tiltDown = Quaternion.Euler(0f, 0f, 0f);
 
         // 最初の目指す角度を安全に設定
@@ -136,7 +136,7 @@ public class Playermanager : MonoBehaviour
         }
 
         // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
-        if (forceDirection != Vector3.zero && horizontalSpeed > 0f && transform.position.y > height - 3400f)
+        if (forceDirection != Vector3.zero && horizontalSpeed > 0f && transform.position.y > 100f)
         {
             rb.AddForce(forceDirection * horizontalSpeed);
         }
@@ -168,7 +168,7 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
         }
 
-        if (transform.position.y < height - 3400f)
+        if (transform.position.y < 50f)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
         }
@@ -268,6 +268,11 @@ public class Playermanager : MonoBehaviour
         return isParachute;
     }
 
+    public float GetDownheight()
+    {
+        return downheight;
+    }
+
     public void FirstProcess()
     {
         //最初の処理
@@ -307,10 +312,11 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < height - 3400f)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < 200f)
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
+            maxSpeed = 10f;
         }
 
         if (isParachute)
