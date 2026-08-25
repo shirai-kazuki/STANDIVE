@@ -197,9 +197,15 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
         }
 
+        if(currentTimer < staytTime)
+        {
+            targetVelocityX = 0f; // 横に移動しないようにする
+        }
+
         if (transform.position.y < 50f)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
+            fallSpeed = 10f;
 
             //ハードウェア追加部分
             if (hardware != null)
@@ -354,11 +360,20 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < 200f)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute)
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
             maxSpeed = 10f;
+            currentTimer = 0;
+
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.MoveParachute();
+                staytTime = hardware.hardTime;
+                lastMoveDirection = 0;
+            }
         }
 
         if (isParachute)
@@ -378,19 +393,13 @@ public class Playermanager : MonoBehaviour
 
             }
 
-            //ハードウェア追加部分
-            if (hardware != null)
-            {
-                hardware.MoveParachute();
-                lastMoveDirection = 0;
-            }
         }
         else
         {
             fallSpeed = 30f;
         }
 
-        if (transform.position.y < 1f)
+        if (transform.position.y < 20f)
         {
             //ハードウェア追加部分
             if (hardware != null)
@@ -398,6 +407,10 @@ public class Playermanager : MonoBehaviour
                 hardware.MoveLanding();
                 lastMoveDirection = 0;
             }
+        }
+
+        if (transform.position.y < 1f)
+        {
 
             // 着地したする
             StopLoop(); // ループ再生を停止

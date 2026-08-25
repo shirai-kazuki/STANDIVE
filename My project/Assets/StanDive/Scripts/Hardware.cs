@@ -89,12 +89,15 @@ public class Hardware : MonoBehaviour
     //パラシュート後、AirMoveを禁止する
     private bool airMoveLocked = false;
 
-    void Start()
+    public float hardTime = 0f;
+
+    IEnumerator Start()
     {
         serial = new SerialPort("COM3", 115200);
         serial.ReadTimeout = 100;
         serial.Open();
 
+        yield return new WaitForSeconds(1.0f);
     }
 
     void Update()
@@ -187,6 +190,7 @@ public class Hardware : MonoBehaviour
                 CancelAutoMove();
                 // 現在の傾きを確認
                 float adjustTime = Mathf.Abs(currentPosition) * 2;
+
 
                 // Aが高い場合
                 if (currentPosition < 0)
@@ -328,6 +332,8 @@ public class Hardware : MonoBehaviour
         }
         // 現在の傾きを確認
         float adjustTime = Mathf.Abs(currentPosition) * 2;
+
+        hardTime = startMove + 0.1f + Mathf.Abs(currentPosition);
 
         // Aが高い場合
         if (currentPosition < 0)
@@ -935,14 +941,14 @@ public class Hardware : MonoBehaviour
             timer += Time.deltaTime;
 
             //5秒後
-            if (!retractSent && timer >= 5.0f)
+            if (!retractSent && timer >= 2.0f)
             {
                 SendCommand("C_Down");
                 retractSent = true;
             }
 
             //10秒後
-            if (!stopSent && timer >= 10.0f)
+            if (!stopSent && timer >= 5.0f)
             {
                 SendCommand("C_Stop");
                 stopSent = true;
