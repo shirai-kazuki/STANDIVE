@@ -114,6 +114,10 @@ public class Playermanager : MonoBehaviour
     // プレイヤーを移動させる関数（VRゴーグル専用・安全版）
     private void MovePlayer()
     {
+        if (!isParachute && transform.position.y < downheight)
+        {
+            currentTimer = 0f; // パラシュートが開く前に下に落ちた場合、タイマーをリセット
+        }
         if(currentTimer < staytTime)
         {
             currentTimer += Time.fixedDeltaTime;
@@ -168,7 +172,7 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
         }
 
-        if (transform.position.y < 50f)
+        if (transform.position.y < 50f || currentTimer < staytTime)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
         }
