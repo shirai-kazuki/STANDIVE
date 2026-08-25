@@ -31,6 +31,10 @@ public class Playermanager : MonoBehaviour
     private float currentTimer = 0f; //時間を計測するためのタイマー変数
     private float staytTime = 3f; //待ち時間の変数
 
+    //ハードウェア追加部分
+    private Hardware hardware;
+    private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -54,6 +58,9 @@ public class Playermanager : MonoBehaviour
 
         // 最初の目指す角度を安全に設定
         targetRotation = tiltUp;
+
+        //ハードウェア追加部分
+        hardware = FindAnyObjectByType<Hardware>();
     }
 
     private void FixedUpdate()
@@ -114,11 +121,7 @@ public class Playermanager : MonoBehaviour
     // プレイヤーを移動させる関数（VRゴーグル専用・安全版）
     private void MovePlayer()
     {
-        if (!isParachute && transform.position.y < downheight)
-        {
-            currentTimer = 0f; // パラシュートが開く前に下に落ちた場合、タイマーをリセット
-        }
-        if(currentTimer < staytTime)
+        if (currentTimer < staytTime)
         {
             currentTimer += Time.fixedDeltaTime;
         }
@@ -132,11 +135,33 @@ public class Playermanager : MonoBehaviour
         if (leftHandHeight > rightHandHeight && currentTimer >= staytTime)
         {
             forceDirection += transform.right;
+
+            //ハードウェア追加部分
+            if (lastMoveDirection != 1)
+            {
+                if (hardware != null)
+                {
+                    hardware.MoveRight();
+                }
+
+                lastMoveDirection = 1;
+            }
         }
         // 左に進む（右手が左手よりも高い場合）
         if (rightHandHeight > leftHandHeight && currentTimer >= staytTime)
         {
             forceDirection -= transform.right;
+
+            //ハードウェア追加部分
+            if (lastMoveDirection != -1)
+            {
+                if (hardware != null)
+                {
+                    hardware.MoveLeft();
+                }
+
+                lastMoveDirection = -1;
+            }
         }
 
         // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
@@ -172,11 +197,24 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 壊れたデータが入っていたら安全に 0 に戻す
         }
 
-        if (transform.position.y < 50f || currentTimer < staytTime)
+        if (currentTimer < staytTime)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
         }
-        
+
+        if (transform.position.y < 50f)
+        {
+            targetVelocityX = 0f; // 横に移動しないようにする
+            fallSpeed = 10f;
+
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.BeforeLanding();
+                lastMoveDirection = 0;
+            }
+        }
+
         if (targetVelocityX > maxSpeed)
         {
             targetVelocityX = maxSpeed; // 横移動の速度がmaxSpeedを超えないように制限
@@ -301,6 +339,12 @@ public class Playermanager : MonoBehaviour
         {
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
+
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.MoveJampingOut();
+            }
         }
     }
 
@@ -316,11 +360,20 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown || transform.position.y < 200f)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute)
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
             maxSpeed = 10f;
+            currentTimer = 0;
+
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.MoveParachute();
+                staytTime = hardware.hardTime;
+                lastMoveDirection = 0;
+            }
         }
 
         if (isParachute)
@@ -339,14 +392,26 @@ public class Playermanager : MonoBehaviour
                 fallSpeed -= 5f * Time.deltaTime; // 徐々に落下速度を落とす
 
             }
+
         }
         else
         {
             fallSpeed = 30f;
         }
 
+        if (transform.position.y < 20f)
+        {
+            //ハードウェア追加部分
+            if (hardware != null)
+            {
+                hardware.MoveLanding();
+                lastMoveDirection = 0;
+            }
+        }
+
         if (transform.position.y < 1f)
         {
+
             // 着地したする
             StopLoop(); // ループ再生を停止
             PlayOneShot(); // 1回再生を開始
