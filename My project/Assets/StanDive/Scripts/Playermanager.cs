@@ -61,6 +61,8 @@ public class Playermanager : MonoBehaviour
 
         //ハードウェア追加部分
         hardware = FindAnyObjectByType<Hardware>();
+
+        hardware.MoveKaze();
     }
 
     private void FixedUpdate()
