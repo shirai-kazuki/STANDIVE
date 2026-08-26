@@ -371,12 +371,12 @@ public class Hardware : MonoBehaviour
         // Aが高い場合
         if (currentPosition < 0)
         {
-            currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 3));
+            currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 4));
         }
         // Bが高い場合
         else if (currentPosition > 0)
         {
-            currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 3));
+            currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 4));
         }
         Finish = false;
     }
@@ -600,6 +600,8 @@ void ReceiveSensor()
         //パラシュート
         if (nowState == 3 && AirMove)
         {
+            SendCommand("V");
+
             relay1Off = true;//排気
             relay2Off = true;
             relay3Off = true;
@@ -640,7 +642,7 @@ void ReceiveSensor()
                     sendValue++;
                     SendCommand(sendValue.ToString());
                 }
-                else if (nowState == 3)
+                else if (nowState == 3 || nowState == 4 )
                 {
                     if (sendValue < 94)
                     {
@@ -730,17 +732,22 @@ void ReceiveSensor()
             yield return null;
         }
 
-        if (nowState == 3)
+        if (nowState == 3 || nowState == 4)
         {
+            if (nowState == 4)
+            {
+                SendCommand("X");
+            }
+
             currentTimer = 0f;
             SendCommand("AB_Down");
-            SendCommand("V");
             while (currentTimer <= (startMove + 0.1f))
             {
                 currentTimer += Time.deltaTime;
             }
             yield return null;
         }
+
         else
         {
             SendCommand("AB_Stop");
