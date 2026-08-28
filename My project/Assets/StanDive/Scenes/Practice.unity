@@ -22599,7 +22599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c134d96964a5a2a4294e1185d43ffc0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RingController
-  ringPrefab: {fileID: 2679258298386440783, guid: 9b6b594017ebc0046840be9f37b6819f, type: 3}
+  ringPrefab: {fileID: 1835772975973711330, guid: cb36e2cfd5f0dff4dbcc6e6014292b60, type: 3}
   spawnDistance: 400
 --- !u!114 &1166901046
 MonoBehaviour:
