@@ -32,6 +32,9 @@ public class Hardware : MonoBehaviour
     //体験終了
     private bool Finish = true;
 
+    //送風機
+    private int sendValue = 94;
+
 
     //圧力センサ
 
@@ -109,107 +112,6 @@ public class Hardware : MonoBehaviour
         if (AirMove)
         {
             CheckSensorSafety();
-        }
-
-        //アクチュエータ
-
-        if (Finish)
-        {
-            //飛び出し（キー）
-            if (Keyboard.current.mKey.wasPressedThisFrame)
-            {
-                CancelAutoMove();
-                AirMove = true;
-                currentRoutine = StartCoroutine(MoveToStop("AB_Up", startMove, 0, 0));
-                //送信コマンド,アクチュエーター動作リミット時間,動作時間用ステータス,圧力用ステータス
-            }
-
-            //右移動（キー）
-            if (Keyboard.current.rKey.wasPressedThisFrame)
-            {
-                CancelAutoMove();
-                if (pressureRoutine != null)
-                {
-                    StopCoroutine(pressureRoutine);
-                }
-                float limit = maxMove - currentPosition;
-                if (AirMove)
-                {
-                    pressureRoutine = StartCoroutine(Air(2));
-                }
-                currentRoutine = StartCoroutine(MoveToStop("B_Up_A_Down", limit, 1, 2));
-            }
-
-            //左移動（キー）
-            if (Keyboard.current.lKey.wasPressedThisFrame)
-            {
-                CancelAutoMove();
-                if (pressureRoutine != null)
-                {
-                    StopCoroutine(pressureRoutine);
-                }
-                float limit = maxMove + currentPosition;
-                if (AirMove)
-                {
-                    pressureRoutine = StartCoroutine(Air(1));
-                }
-                currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", limit, -1, 1));
-            }
-
-            //パラシュート（キー）
-            if (Keyboard.current.pKey.wasPressedThisFrame)
-            {
-                CancelAutoMove();
-                if (pressureRoutine != null)
-                {
-                    StopCoroutine(pressureRoutine);
-                }
-                // 現在の傾きを確認
-                float adjustTime = Mathf.Abs(currentPosition) * 2;
-
-                // Aが高い場合
-                if (currentPosition < 0)
-                {
-                    currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 3));
-                }
-                // Bが高い場合
-                else if (currentPosition > 0)
-                {
-                    currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 3));
-                }
-                paratyakutiRoutine = StartCoroutine(ParachuteDeploy());
-
-                //パラシュート後の左右傾き
-                maxMove = 1.5f;
-                startMove = maxMove;
-            }
-
-            //着地前横移動できなくなったタイミング
-            if (Keyboard.current.iKey.wasPressedThisFrame)
-            {
-                CancelAutoMove();
-                // 現在の傾きを確認
-                float adjustTime = Mathf.Abs(currentPosition) * 2;
-
-
-                // Aが高い場合
-                if (currentPosition < 0)
-                {
-                    currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 3));
-                }
-                // Bが高い場合
-                else if (currentPosition > 0)
-                {
-                    currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 3));
-                }
-            }
-        }
-
-        //着地感覚提示（キー）
-        if (Keyboard.current.cKey.wasPressedThisFrame)
-        {
-            paratyakutiRoutine = StartCoroutine(LandingImpact());
-            Finish = false;
         }
 
         //パラシュート再設置
@@ -336,24 +238,24 @@ public class Hardware : MonoBehaviour
             StopCoroutine(pressureRoutine);
         }
         // 現在の傾きを確認
-        float adjustTime = Mathf.Abs(currentPosition) * 2;
+        float adjustTime = Mathf.Abs(currentPosition);
 
         hardTime = startMove + 0.1f + Mathf.Abs(currentPosition);
 
         // Aが高い場合
         if (currentPosition < 0)
         {
-            currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 3));
+            currentRoutine = StartCoroutine(MoveToStop("B_Up_A_Down", adjustTime, 0, 3));
         }
         // Bが高い場合
         else if (currentPosition > 0)
         {
-            currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 3));
+            currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", adjustTime, 0, 3));
         }
         paratyakutiRoutine = StartCoroutine(ParachuteDeploy());
 
         //パラシュート後の左右傾き
-        maxMove = 1.5f;
+        maxMove = 2.0f;
         startMove = maxMove;
     }
 
@@ -368,12 +270,12 @@ public class Hardware : MonoBehaviour
         // Aが高い場合
         if (currentPosition < 0)
         {
-            currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 3));
+            currentRoutine = StartCoroutine(MoveToStop("A_Down", adjustTime, 0, 4));
         }
         // Bが高い場合
         else if (currentPosition > 0)
         {
-            currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 3));
+            currentRoutine = StartCoroutine(MoveToStop("B_Down", adjustTime, 0, 4));
         }
         Finish = false;
     }
@@ -384,8 +286,16 @@ public class Hardware : MonoBehaviour
         paratyakutiRoutine = StartCoroutine(LandingImpact());
     }
 
-    //センサー値取得
-    void ReceiveSensor()
+    //送風機初期
+    public void MoveKaze()
+    {
+        SendCommand("Kaze");
+        Debug.Log("Kaze");
+    }
+    
+
+//センサー値取得
+void ReceiveSensor()
     {
         if (serial != null && serial.IsOpen && serial.BytesToRead > 0)
         {
@@ -515,22 +425,22 @@ public class Hardware : MonoBehaviour
                 sensorLMinLimit = sensorAMinLimit;
             }
 
-            // 1.5秒で一度だけ
-            if (!CommandSent1 && pressureTimer >= 1.5f)
+            // 1.0秒で一度だけ
+            if (!CommandSent1 && pressureTimer >= 1.0f)
             {
                 CommandSent1 = true;
                 PressureMove();
             }
 
-            // 5.0秒で一度だけ
-            if (!CommandSent2 && pressureTimer >= 5.0f)
+            // 4.0秒で一度だけ
+            if (!CommandSent2 && pressureTimer >= 4.0f)
             {
                 CommandSent2 = true;
                 PressureMove();
             }
 
-            // 10.0秒で一度だけ
-            if (!CommandSent3 && pressureTimer >= 10.0f)
+            // 8.0秒で一度だけ
+            if (!CommandSent3 && pressureTimer >= 8.0f)
             {
                 CommandSent3 = true;
                 PressureMove();
@@ -554,6 +464,7 @@ public class Hardware : MonoBehaviour
         //現在の移動情報を保存
         currentDirection = direction;
         currentTimer = 0f;
+        float sendTimer = 0f;
 
         //圧力制御が終了したか
         bool pressureFinished = false;
@@ -561,6 +472,9 @@ public class Hardware : MonoBehaviour
         //飛び出し時
         if (nowState == 0 && AirMove)
         {
+            //送風機
+            SendCommand("W");
+
             relay1Off = false;
             relay2Off = false;
             relay3Off = false;
@@ -585,6 +499,8 @@ public class Hardware : MonoBehaviour
         //パラシュート
         if (nowState == 3 && AirMove)
         {
+            SendCommand("V");
+
             relay1Off = true;//排気
             relay2Off = true;
             relay3Off = true;
@@ -608,6 +524,38 @@ public class Hardware : MonoBehaviour
         while (currentTimer < timeLimit)
         {
             currentTimer += Time.deltaTime;
+            sendTimer += Time.deltaTime;
+
+            //秒ごとに1ずつ変化
+            if (sendTimer >= ((maxMove * 2) / 11))
+            {
+                sendTimer = 0f;
+
+                if (nowState == 2)
+                {
+                    sendValue--;
+                    SendCommand(sendValue.ToString());
+                }
+                else if (nowState == 1)
+                {
+                    sendValue++;
+                    SendCommand(sendValue.ToString());
+                }
+                else if (nowState == 3 || nowState == 4 )
+                {
+                    if (sendValue < 94)
+                    {
+                        sendValue++;
+                        SendCommand(sendValue.ToString());
+                    }
+                    else if (sendValue > 94)
+                    {
+                        sendValue--;
+                        SendCommand(sendValue.ToString());
+                    }
+                }
+            }
+
 
             //飛び出し
             if (AirMove)
@@ -683,16 +631,22 @@ public class Hardware : MonoBehaviour
             yield return null;
         }
 
-        if (nowState == 3)
+        if (nowState == 3 || nowState == 4)
         {
+            if (nowState == 4)
+            {
+                SendCommand("X");
+            }
+
             currentTimer = 0f;
             SendCommand("AB_Down");
-            while (currentTimer <= (startMove + 0.1f - (timeLimit / 2)))
+            while (currentTimer <= (startMove + 0.1f))
             {
                 currentTimer += Time.deltaTime;
             }
             yield return null;
         }
+
         else
         {
             SendCommand("AB_Stop");
