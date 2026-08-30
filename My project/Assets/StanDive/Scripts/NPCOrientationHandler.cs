@@ -12,6 +12,8 @@ public class NPCOrientationHandler : MonoBehaviour
     public Playermanager playermanager; 
 
     private bool isOriParachute = false;
+    private bool isRight = false;
+    private bool isLeft = false;
 
     void Start()
     {
@@ -23,11 +25,11 @@ public class NPCOrientationHandler : MonoBehaviour
     {
         float targetZ = 0f;
 
-        if (rb.linearVelocity.x > 0.01f)
+        if (isRight)
         {
             targetZ = -40f; // 右移動時のZ角度
         }
-        else if (rb.linearVelocity.x < -0.01f)
+        else if (isLeft)
         {
             targetZ = 40f;  // 左移動時のZ角度
         }
@@ -62,5 +64,11 @@ public class NPCOrientationHandler : MonoBehaviour
             isOriParachute = true;
             NPCs = NPCsaft;
         }
+    }
+
+    public void SetIsRightLeft(bool right ,bool left)
+    {
+        isRight = right;
+        isLeft = left;
     }
 }

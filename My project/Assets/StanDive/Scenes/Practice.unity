@@ -2131,7 +2131,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &140705818
 Transform:
   m_ObjectHideFlags: 0
@@ -7423,7 +7423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &509135208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8512,7 +8512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &570522436
 Transform:
   m_ObjectHideFlags: 0
@@ -22461,6 +22461,7 @@ MonoBehaviour:
   audioSource: {fileID: 1166901047}
   loopClip: {fileID: 8300000, guid: f527c18a38064444ab06d7d2c7dbbc73, type: 3}
   oneShotClip: {fileID: 8300000, guid: 75772b87025bdce47adefe9bd52a8caa, type: 3}
+  nPCOrientationHandler: {fileID: 1166901046}
 --- !u!54 &1166901040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22599,7 +22600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c134d96964a5a2a4294e1185d43ffc0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RingController
-  ringPrefab: {fileID: 1835772975973711330, guid: cb36e2cfd5f0dff4dbcc6e6014292b60, type: 3}
+  ringPrefab: {fileID: 7054220900034721147, guid: d7f9e14377815f64a91eb9ef3ea6657c, type: 3}
   spawnDistance: 400
 --- !u!114 &1166901046
 MonoBehaviour:
