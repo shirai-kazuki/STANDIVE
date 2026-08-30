@@ -97,14 +97,21 @@ public class Hardware : MonoBehaviour
     //パラシュート後、AirMoveを禁止する
     private bool airMoveLocked = false;
 
+    // パラシュートを開ける高度に到達したか
+    public bool parachuteOK = false;
+
     //ソフトのほうに送る時間用
     public float hardTime = 0f;
+
+    private Playermanager playermanager;
 
     void Start()
     {
         serial = new SerialPort("COM3", 115200);
         serial.ReadTimeout = 100;
         serial.Open();
+
+        playermanager = FindAnyObjectByType<Playermanager>();
     }
 
     void Update()
@@ -183,7 +190,12 @@ public class Hardware : MonoBehaviour
 
     }
 
-    
+    public void SetParachute(bool value)
+    {
+        parachuteOK = value;
+    }
+
+
     //飛び出し
     public void MoveJampingOut()
     {
@@ -306,6 +318,14 @@ void ReceiveSensor()
             try
             {
                 string data = serial.ReadLine().Trim();
+
+                if (data == "P")
+                {
+                    if (parachuteOK)
+                    {
+                        playermanager.SetParachuteOpen(true);//パラシュートの処理を可能にする
+                    }
+                }
 
                 if (data.StartsWith("FSR:"))
                 {

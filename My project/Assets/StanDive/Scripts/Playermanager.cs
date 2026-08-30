@@ -34,6 +34,7 @@ public class Playermanager : MonoBehaviour
     //ハードウェア追加部分
     private Hardware hardware;
     private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
+    public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
 
     private void Start()
     {
@@ -348,6 +349,11 @@ public class Playermanager : MonoBehaviour
         }
     }
 
+    public void SetParachuteOpen(bool value)
+    {
+        parachuteOpen = value;
+    }
+
     public void ThirdProcess()
     {
         //3番目の処理
@@ -357,10 +363,12 @@ public class Playermanager : MonoBehaviour
         {
             isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
             isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
+
+            hardware.SetParachute(true);//ハードウェアのPの処理を可能にする
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute || parachuteOpen)
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
