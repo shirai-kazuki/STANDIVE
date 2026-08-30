@@ -363,12 +363,15 @@ public class Playermanager : MonoBehaviour
         {
             isLeftHandDown = false;// 左手が下に動いたかどうかを保存する変数
             isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
+        }
 
-            hardware.SetParachute(true);//ハードウェアのPの処理を可能にする
+        if (transform.position.y <= downheight)
+        {
+            hardware.SetParachute(true);
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute || parachuteOpen)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute || (parachuteOpen && !isParachute))
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
