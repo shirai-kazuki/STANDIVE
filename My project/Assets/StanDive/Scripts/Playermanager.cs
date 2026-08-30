@@ -30,6 +30,7 @@ public class Playermanager : MonoBehaviour
     public AudioClip oneShotClip; // 1回用（SEなど）
     private float currentTimer = 0f; //時間を計測するためのタイマー変数
     private float staytTime = 3f; //待ち時間の変数
+    public NPCOrientationHandler nPCOrientationHandler;
 
     //ハードウェア追加部分
     private Hardware hardware;
@@ -111,6 +112,7 @@ public class Playermanager : MonoBehaviour
         if (heightDifference < 0.001f)
         {
             horizontalSpeed = 0f;
+            nPCOrientationHandler.SetIsRightLeft(false ,false);
             return;
         }
 
@@ -124,6 +126,7 @@ public class Playermanager : MonoBehaviour
         if (currentTimer < staytTime)
         {
             currentTimer += Time.fixedDeltaTime;
+            nPCOrientationHandler.SetIsRightLeft(false ,false);
         }
 
         // 1. 現在の手の高さから左右の移動速度を計算
@@ -135,6 +138,7 @@ public class Playermanager : MonoBehaviour
         if (leftHandHeight > rightHandHeight && currentTimer >= staytTime)
         {
             forceDirection += transform.right;
+            nPCOrientationHandler.SetIsRightLeft(true ,false);
 
             //ハードウェア追加部分
             if (lastMoveDirection != 1)
@@ -151,6 +155,7 @@ public class Playermanager : MonoBehaviour
         if (rightHandHeight > leftHandHeight && currentTimer >= staytTime)
         {
             forceDirection -= transform.right;
+            nPCOrientationHandler.SetIsRightLeft(false ,true);
 
             //ハードウェア追加部分
             if (lastMoveDirection != -1)
@@ -205,6 +210,7 @@ public class Playermanager : MonoBehaviour
         if (transform.position.y < 50f)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
+            currentTimer = 0;
             fallSpeed = 10f;
 
             //ハードウェア追加部分
