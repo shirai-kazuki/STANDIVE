@@ -258,6 +258,8 @@ public class Hardware : MonoBehaviour
 
         hardTime = startMove + 0.1f + Mathf.Abs(currentPosition);
 
+        paratyakutiRoutine = StartCoroutine(ParachuteDeploy(adjustTime));
+
         // Aが高い場合
         if (currentPosition < 0)
         {
@@ -268,7 +270,7 @@ public class Hardware : MonoBehaviour
         {
             currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", adjustTime, 0, 3));
         }
-        paratyakutiRoutine = StartCoroutine(ParachuteDeploy(adjustTime));
+        //paratyakutiRoutine = StartCoroutine(ParachuteDeploy(adjustTime));//
 
         //パラシュート後の左右傾き
         maxMove = 2.0f;
@@ -844,7 +846,7 @@ void ReceiveSensor()
             timer += Time.deltaTime;
 
             // 秒後にC_Retract
-            if (!retractSent && timer >= pTime)
+            if (!retractSent && timer >= 0)
             {
                 SendCommand("C_Down");
                 retractSent = true;
@@ -903,6 +905,7 @@ void ReceiveSensor()
         bool retractSent = false;
         bool stopSent = false;
 
+
         SendCommand("C_Up");
 
         while (!stopSent)
@@ -910,14 +913,14 @@ void ReceiveSensor()
             timer += Time.deltaTime;
 
             //5秒後
-            if (!retractSent && timer >= 2.0f)
+            if (!retractSent && timer >= 3.0f)
             {
                 SendCommand("C_Down");
                 retractSent = true;
             }
 
             //10秒後
-            if (!stopSent && timer >= 5.0f)
+            if (!stopSent && timer >= 9.0f)
             {
                 SendCommand("C_Stop");
                 stopSent = true;
