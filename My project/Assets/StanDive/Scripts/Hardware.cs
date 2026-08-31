@@ -908,14 +908,14 @@ void ReceiveSensor()
         {
             timer += Time.deltaTime;
 
-            if (!upSent && timer >= 0.55)
+            if (!upSent && timer >= 0.68)
             {
                 SendCommand("C_Up");
                 upSent = true;
             }
 
             //5秒後
-            if (!retractSent && timer >= 3.6f)
+            if (!retractSent && timer >= 3.68f)
             {
                 SendCommand("C_Down");
                 retractSent = true;
