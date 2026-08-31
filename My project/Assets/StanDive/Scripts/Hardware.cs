@@ -60,25 +60,30 @@ public class Hardware : MonoBehaviour
     //飛び出し加圧max時間
     private float AirTimeLimit = 0.7f;
     //飛び出し加圧maxセンサー値
-    private int sensorLimit0 = 500;
+    private int sensorLimit0 = 600;
 
     //加圧時間
-    private float timerUp1 = 0f;
-    private float timerUp2 = 0f;
-    private float timerUp3 = 0f;
-    private float timerUp4 = 0f;
+    private float timerUp = 0f;
 
-    private float timeLimitUp = 0.1f;
+    private float timeLimitUp = 0.15f;
 
     //傾き
     //加圧傾き方向のmaxセンサー値
-    private int sensorAMaxLimit = 600;
+    private int sensorAMaxLimit = 650;
     //加圧傾きと逆のmaxセンサー値
-    private int sensorBMaxLimit = 570;
+    private int sensorBMaxLimit = 630;
     //加圧傾き方向のminセンサー値
-    private int sensorAMinLimit = 550;
+    private int sensorAMinLimit = 520;
     //加圧傾きと逆のminセンサー値
     private int sensorBMinLimit = 520;
+
+    //圧力共有値
+    private int correctValue = 400;
+
+    //15秒タイマー
+    private float allPressureTimer = 0f;
+
+    private float pressureTimer = 0f;
 
     //加圧右maxセンサー値
     private int sensorRMaxLimit = 0;
@@ -92,15 +97,21 @@ public class Hardware : MonoBehaviour
     //パラシュート後、AirMoveを禁止する
     private bool airMoveLocked = false;
 
+    // パラシュートを開ける高度に到達したか
+    public bool parachuteOK = false;
+
+    //ソフトのほうに送る時間用
     public float hardTime = 0f;
 
-    IEnumerator Start()
+    private Playermanager playermanager;
+
+    void Start()
     {
         serial = new SerialPort("COM3", 115200);
         serial.ReadTimeout = 100;
         serial.Open();
 
-        yield return new WaitForSeconds(1.0f);
+        playermanager = FindAnyObjectByType<Playermanager>();
     }
 
     void Update()
@@ -179,7 +190,12 @@ public class Hardware : MonoBehaviour
 
     }
 
-    
+    public void SetParachute(bool value)
+    {
+        parachuteOK = value;
+    }
+
+
     //飛び出し
     public void MoveJampingOut()
     {
@@ -252,7 +268,7 @@ public class Hardware : MonoBehaviour
         {
             currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", adjustTime, 0, 3));
         }
-        paratyakutiRoutine = StartCoroutine(ParachuteDeploy());
+        paratyakutiRoutine = StartCoroutine(ParachuteDeploy(adjustTime));
 
         //パラシュート後の左右傾き
         maxMove = 2.0f;
@@ -303,6 +319,14 @@ void ReceiveSensor()
             {
                 string data = serial.ReadLine().Trim();
 
+                if (data == "P")
+                {
+                    if (parachuteOK)
+                    {
+                        playermanager.SetParachuteOpen(true);//パラシュートの処理を可能にする
+                    }
+                }
+
                 if (data.StartsWith("FSR:"))
                 {
                     data = data.Substring(4);
@@ -338,54 +362,38 @@ void ReceiveSensor()
 
     void CorrectSensorValues()
     {
-        // 1,3
-        int correctRValue = 0;
+        // 4つのセンサーの中でcorrectValueを超えている最大値を探す
+        int correctAllValue = correctValue;
 
-        if (sensorData1 > 200)
-        {
-            correctRValue = sensorData1;
-        }
-        else if (sensorData3 > 200)
-        {
-            correctRValue = sensorData3;
-        }
+        if (sensorData1 > correctAllValue)
+            correctAllValue = sensorData1;
 
-        if (sensorData1 <= 200 && correctRValue > 200)
-            sensorData1 = correctRValue;
+        if (sensorData2 > correctAllValue)
+            correctAllValue = sensorData2;
 
-        if (sensorData3 <= 200 && correctRValue > 200)
-            sensorData3 = correctRValue;
+        if (sensorData3 > correctAllValue)
+            correctAllValue = sensorData3;
 
-        // 2,4
-        int correctLValue = 0;
+        if (sensorData4 > correctAllValue)
+            correctAllValue = sensorData4;
 
-        if (sensorData2 > 200)
-        {
-            correctLValue = sensorData2;
-        }
-        else if (sensorData4 > 200)
-        {
-            correctLValue = sensorData4;
-        }
+        // 400以下のセンサーを最大値に合わせる
+        if (sensorData1 <= correctValue && correctAllValue > correctValue)
+            sensorData1 = correctAllValue;
 
-        if (sensorData2 <= 200 && correctLValue > 200)
-            sensorData2 = correctLValue;
+        if (sensorData2 <= correctValue && correctAllValue > correctValue)
+            sensorData2 = correctAllValue;
 
-        if (sensorData4 <= 200 && correctLValue > 200)
-            sensorData4 = correctLValue;
+        if (sensorData3 <= correctValue && correctAllValue > correctValue)
+            sensorData3 = correctAllValue;
+
+        if (sensorData4 <= correctValue && correctAllValue > correctValue)
+            sensorData4 = correctAllValue;
 
     }
 
     IEnumerator Air(int nowState)
     {
-        float pressureTimer = 0f;
-
-        //nowState == 1,2 の時間処理用
-        bool CommandSent1 = false;
-        bool CommandSent2 = false;
-        bool CommandSent3 = false;
-        bool CommandSent4 = false;
-
         relay1Off = false;//加圧
         relay2Off = false;
         relay3Off = false;
@@ -394,12 +402,15 @@ void ReceiveSensor()
         SendCommand("7_Off");
         relay7Off = true;
 
+        //今回の加圧時間をリセット
+        timerUp = 0f;
+
         while (true)
         {
-            pressureTimer += Time.deltaTime;
-
             // 常に圧力センサーを監視
             CheckPressure();
+
+            pressureTimer += Time.deltaTime;
 
             if (nowState == 1)
             {
@@ -425,32 +436,50 @@ void ReceiveSensor()
                 sensorLMinLimit = sensorAMinLimit;
             }
 
-            // 1.0秒で一度だけ
-            if (!CommandSent1 && pressureTimer >= 1.0f)
-            {
-                CommandSent1 = true;
-                PressureMove();
-            }
+            // 4つすべて400未満
+            bool allSensorLow = sensorData1 < correctValue &&
+                                sensorData2 < correctValue &&
+                                sensorData3 < correctValue &&
+                                sensorData4 < correctValue;
 
-            // 4.0秒で一度だけ
-            if (!CommandSent2 && pressureTimer >= 4.0f)
+            //4つすべて450未満
+            if (allSensorLow)
             {
-                CommandSent2 = true;
-                PressureMove();
-            }
+                allPressureTimer += Time.deltaTime;
 
-            // 8.0秒で一度だけ
-            if (!CommandSent3 && pressureTimer >= 8.0f)
-            {
-                CommandSent3 = true;
-                PressureMove();
-            }
+                //センサー値が取れていない場合、15秒ごとに4つ全部を加圧
+                if (allPressureTimer >= 15.0f)
+                {
+                    allPressureTimer = 0f;
 
-            // 15.0秒で一度だけ
-            if (!CommandSent4 && pressureTimer >= 15.0f)
+                    SendCommand("1_On");
+                    SendCommand("2_On");
+                    SendCommand("3_On");
+                    SendCommand("4_On");
+                    relay1Off = false;
+                    relay2Off = false;
+                    relay3Off = false;
+                    relay4Off = false;
+                    allPressureTimer = 0f;
+                    pressureTimer = 0f;
+                    timerUp = 0f;
+                }
+            }
+            else
             {
-                CommandSent4 = true;
-                PressureMove();
+                //450以上のセンサーがある場合、センサーで監視しながら加圧
+                allPressureTimer = 0f;
+
+                // 0.1秒後、その後1.5秒おきにPressureMove()
+                if (pressureTimer == 0.1f)
+                {
+                    PressureMove();
+                }
+                else if (pressureTimer >= 1.7f)
+                {
+                    pressureTimer = 0.2f;
+                    PressureMove();
+                }
             }
 
             yield return null;
@@ -671,47 +700,31 @@ void ReceiveSensor()
 
     void PressureMove()
     {
-        // 1
-        if (relay1Off && sensorData1 <= sensorRMinLimit)
+        if ((relay1Off && sensorData1 <= sensorRMinLimit) &&
+            (relay2Off && sensorData2 <= sensorLMinLimit) &&
+            (relay3Off && sensorData3 <= sensorRMinLimit) &&
+            (relay4Off && sensorData4 <= sensorLMinLimit))
         {
             SendCommand("1_On");
-            relay1Off = false;
-            timerUp1 = 0f;
-        }
-
-        // 2
-        if (relay2Off && sensorData2 <= sensorLMinLimit)
-        {
             SendCommand("2_On");
-            relay2Off = false;
-            timerUp2 = 0f;
-        }
-
-        // 3
-        if (relay3Off && sensorData3 <= sensorRMinLimit)
-        {
             SendCommand("3_On");
-            relay3Off = false;
-            timerUp3 = 0f;
-        }
-
-        // 4
-        if (relay4Off && sensorData4 <= sensorLMinLimit)
-        {
             SendCommand("4_On");
+            relay1Off = false;
+            relay2Off = false;
+            relay3Off = false;
             relay4Off = false;
-            timerUp4 = 0f;
+            timerUp = 0f;
         }
     }
 
     void CheckPressure()
     {
+        timerUp += Time.deltaTime;
+
         // 1
         if (!relay1Off)
         {
-            timerUp1 += Time.deltaTime;
-
-            if (sensorData1 >= sensorRMaxLimit || timerUp1 >= timeLimitUp)
+            if (sensorData1 >= sensorRMaxLimit || timerUp >= timeLimitUp)
             {
                 SendCommand("1_Off");
                 relay1Off = true;
@@ -721,9 +734,7 @@ void ReceiveSensor()
         // 2
         if (!relay2Off)
         {
-            timerUp2 += Time.deltaTime;
-
-            if (sensorData2 >= sensorLMaxLimit || timerUp2 >= timeLimitUp)
+            if (sensorData2 >= sensorLMaxLimit || timerUp >= timeLimitUp)
             {
                 SendCommand("2_Off");
                 relay2Off = true;
@@ -733,9 +744,7 @@ void ReceiveSensor()
         // 3
         if (!relay3Off)
         {
-            timerUp3 += Time.deltaTime;
-
-            if (sensorData3 >= sensorRMaxLimit || timerUp3 >= timeLimitUp)
+            if (sensorData3 >= sensorRMaxLimit || timerUp >= timeLimitUp)
             {
                 SendCommand("3_Off");
                 relay3Off = true;
@@ -745,9 +754,7 @@ void ReceiveSensor()
         // 4
         if (!relay4Off)
         {
-            timerUp4 += Time.deltaTime;
-
-            if (sensorData4 >= sensorLMaxLimit || timerUp4 >= timeLimitUp)
+            if (sensorData4 >= sensorLMaxLimit || timerUp >= timeLimitUp)
             {
                 SendCommand("4_Off");
                 relay4Off = true;
@@ -758,9 +765,10 @@ void ReceiveSensor()
     //センサー値による常時制御
     void CheckSensorSafety()
     {
-        //センサー値630を超えたら、そのセンサーに対応する電磁弁をOFF、7_On
+        //センサー値700を超えたら、そのセンサーに対応する電磁弁をOFF、7_On
+        int sensorOver = 700;
 
-        if (sensorData1 > 630)
+        if (sensorData1 > sensorOver)
         {
             SendCommand("1_Off");
             relay1Off = true;
@@ -772,7 +780,7 @@ void ReceiveSensor()
             }
         }
 
-        if (sensorData2 > 630)
+        if (sensorData2 > sensorOver)
         {
             SendCommand("2_Off");
             relay2Off = true;
@@ -784,7 +792,7 @@ void ReceiveSensor()
             }
         }
 
-        if (sensorData3 > 630)
+        if (sensorData3 > sensorOver)
         {
             SendCommand("3_Off");
             relay3Off = true;
@@ -796,7 +804,7 @@ void ReceiveSensor()
             }
         }
 
-        if (sensorData4 > 630)
+        if (sensorData4 > sensorOver)
         {
             SendCommand("4_Off");
             relay4Off = true;
@@ -808,8 +816,10 @@ void ReceiveSensor()
             }
         }
 
-        //570を下回ったら7_Off
-        if (sensorData1 < 570 && sensorData2 < 570 && sensorData3 < 570 && sensorData4 < 570)
+        //650を下回ったら7_Off
+        int sensorLower = 650;
+
+        if (sensorData1 < sensorLower && sensorData2 < sensorLower && sensorData3 < sensorLower && sensorData4 < sensorLower)
         {
             if (!relay7Off && AirMove)
             {
@@ -820,7 +830,7 @@ void ReceiveSensor()
     }
 
     //パラシュート提示
-    IEnumerator ParachuteDeploy()
+    IEnumerator ParachuteDeploy(float pTime)
     {
         Debug.Log("パラシュート展開開始");
         SendCommand("C_Relay_NO");
@@ -833,15 +843,15 @@ void ReceiveSensor()
         {
             timer += Time.deltaTime;
 
-            // 1秒後にC_Retract
-            if (!retractSent && timer >= 1.0f)
+            // 秒後にC_Retract
+            if (!retractSent && timer >= pTime)
             {
                 SendCommand("C_Down");
                 retractSent = true;
             }
 
-            // 開始から4秒後にC_Stop
-            if (!stopSent && timer >= 4.0f)
+            // 開始から6秒後にC_Stop
+            if (!stopSent && timer >= 6.0f)
             {
                 SendCommand("C_Stop");
                 stopSent = true;

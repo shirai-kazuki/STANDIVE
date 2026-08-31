@@ -4,6 +4,8 @@ public class RingController : MonoBehaviour
 {
     [SerializeField] private GameObject ringPrefab; // リングのプレハブ
     [SerializeField] private float spawnDistance = 400.0f; // プレイヤーの前方に出現させる距離
+    public AudioSource audioSource;
+    public AudioClip oneShotClip; // 1回用（SEなど）
     
     private GameObject currentRing;
     private int score = 0;
@@ -59,6 +61,8 @@ public class RingController : MonoBehaviour
             score += 100;
             Debug.Log("Score: " + score);
 
+            PlayOneShot();
+
             // くぐったリングを消去
             Destroy(other.gameObject);
 
@@ -71,6 +75,13 @@ public class RingController : MonoBehaviour
     {
         Destroy(currentRing);
         SpawnRing();
+    }
+
+    // 2. 1回だけ再生する（SE向け：重なり可能）
+    public void PlayOneShot()
+    {
+        // loop設定に関係なく1回だけ再生
+        audioSource.PlayOneShot(oneShotClip, 1f); // 1fは音量の倍率（0.0～1.0）
     }
 }
 

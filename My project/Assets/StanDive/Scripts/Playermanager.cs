@@ -27,7 +27,8 @@ public class Playermanager : MonoBehaviour
     private Quaternion targetRotation;
     public AudioSource audioSource;
     public AudioClip loopClip; // ループ用（BGMなど）
-    public AudioClip oneShotClip; // 1回用（SEなど）
+    public AudioClip oneShotClip_1; // 1回用（SEなど）
+    public AudioClip oneShotClip_2; // 1回用（SEなど）
     private float currentTimer = 0f; //時間を計測するためのタイマー変数
     private float staytTime = 3f; //待ち時間の変数
     public NPCOrientationHandler nPCOrientationHandler;
@@ -35,6 +36,7 @@ public class Playermanager : MonoBehaviour
     //ハードウェア追加部分
     private Hardware hardware;
     private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
+    public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
 
     private void Start()
     {
@@ -66,6 +68,10 @@ public class Playermanager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (currentTimer < staytTime)
+        {
+            currentTimer += Time.fixedDeltaTime;
+        }
         // 今の番号に合わせて、実行する処理を毎フレーム切り替える
         if (progressStep == 0)
         {
@@ -125,7 +131,6 @@ public class Playermanager : MonoBehaviour
     {
         if (currentTimer < staytTime)
         {
-            currentTimer += Time.fixedDeltaTime;
             nPCOrientationHandler.SetIsRightLeft(false ,false);
         }
 
@@ -264,7 +269,7 @@ public class Playermanager : MonoBehaviour
     }
 
     // 2. 1回だけ再生する（SE向け：重なり可能）
-    public void PlayOneShot()
+    public void PlayOneShot(AudioClip oneShotClip)
     {
         // loop設定に関係なく1回だけ再生
         audioSource.PlayOneShot(oneShotClip, 1f); // 1fは音量の倍率（0.0～1.0）
@@ -306,6 +311,11 @@ public class Playermanager : MonoBehaviour
         isRightHandDown = isDown;
     }
 
+    public void SetParachuteOpen(bool value)
+    {
+        parachuteOpen = value;
+    }
+
     public Vector3 GetPlayerPosition()
     {
         return transform.position;
@@ -333,6 +343,8 @@ public class Playermanager : MonoBehaviour
         // 距離が閾値以下になったら到着とする
         if (distance <= arrivalThreshold)
         {
+            PlayOneShot(oneShotClip_2); // 1回再生を開始
+            currentTimer = 0f;
             SetisHandWave(false); // 手を振っていない状態にリセット
             progressStep = 1; // 次の処理に進む
         }
@@ -341,7 +353,7 @@ public class Playermanager : MonoBehaviour
     public void SecondProcess()
     {
         //2番目の処理
-        if (isHandWave)
+        if (currentTimer > staytTime)
         {
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
@@ -365,13 +377,18 @@ public class Playermanager : MonoBehaviour
             isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
         }
 
+        if (transform.position.y <= downheight)
+        {
+            hardware.SetParachute(true);
+        }
+
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute)
+        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute || (parachuteOpen && !isParachute))
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
             maxSpeed = 10f;
-            currentTimer = 0;
+            currentTimer = 0f;
 
             //ハードウェア追加部分
             if (hardware != null)
@@ -420,7 +437,7 @@ public class Playermanager : MonoBehaviour
 
             // 着地したする
             StopLoop(); // ループ再生を停止
-            PlayOneShot(); // 1回再生を開始
+            PlayOneShot(oneShotClip_1); // 1回再生を開始
             progressStep = 3; // 次の処理に進む
         }
     }
