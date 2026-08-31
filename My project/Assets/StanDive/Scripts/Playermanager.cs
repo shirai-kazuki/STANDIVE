@@ -357,6 +357,7 @@ public class Playermanager : MonoBehaviour
         {
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
+            currentTimer = 0f;
 
             //ハードウェア追加部分
             if (hardware != null)
