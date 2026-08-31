@@ -247,7 +247,7 @@ public class Playermanager : MonoBehaviour
 
     private void TiltPlayer()
     {
-        if (isParachute && currentTimer >= staytTime)
+        if (isParachute && currentTimer >= 0.5f)
         {
             targetRotation = tiltDown;
         }
@@ -388,7 +388,7 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute || (parachuteOpen && !isParachute))
+        if (transform.position.y < 200f && !isParachute || (parachuteOpen && !isParachute))
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
@@ -408,11 +408,14 @@ public class Playermanager : MonoBehaviour
         {
             // ここでループ音の音量を小さくする（0.0 〜 1.0 の間で指定。例は 0.2）
             audioSource.volume = 0.2f;
-            // 子オブジェクトをアクティブにする
-            ActiveChildByName("Parachute");
-            ActiveChildByName("Rope");
-            // 子オブジェクトを非アクティブにする
-            DeactivateChildByName("WindPressure");
+            if(currentTimer >= 0.5f)
+            {
+                // 子オブジェクトをアクティブにする
+                ActiveChildByName("Parachute");
+                ActiveChildByName("Rope");
+                // 子オブジェクトを非アクティブにする
+                DeactivateChildByName("WindPressure");
+            }
 
             //速度を落とす
             if (fallSpeed > 10f)
@@ -427,7 +430,7 @@ public class Playermanager : MonoBehaviour
             fallSpeed = 30f;
         }
 
-        if (transform.position.y < 20f)
+        if (transform.position.y <= 30f)
         {
             //ハードウェア追加部分
             if (hardware != null)
@@ -444,6 +447,8 @@ public class Playermanager : MonoBehaviour
             StopLoop(); // ループ再生を停止
             audioSource.volume = 1f;
             PlayOneShot(oneShotClip_1); // 1回再生を開始
+
+
             // 子オブジェクトを非アクティブにする
             DeactivateChildByName("Parachute");
             DeactivateChildByName("Rope");
