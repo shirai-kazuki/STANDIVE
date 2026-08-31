@@ -47,7 +47,7 @@ public class Playermanager : MonoBehaviour
 
         // 初期の高さを保存
         height = transform.position.y;
-        downheight = height - 2900f;
+        downheight = 600f;
 
         // 安全な回転速度の制限（Unityのデフォルト、または少し早めの 20 前後が安全です）
         rb.maxAngularVelocity = 20f;
@@ -118,7 +118,6 @@ public class Playermanager : MonoBehaviour
         if (heightDifference < 0.001f)
         {
             horizontalSpeed = 0f;
-            nPCOrientationHandler.SetIsRightLeft(false ,false);
             return;
         }
 
@@ -172,6 +171,11 @@ public class Playermanager : MonoBehaviour
 
                 lastMoveDirection = -1;
             }
+        }
+
+        if (heightDifference < 0.03f)
+        {
+            nPCOrientationHandler.SetIsRightLeft(false, false);
         }
 
         // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
@@ -243,7 +247,7 @@ public class Playermanager : MonoBehaviour
 
     private void TiltPlayer()
     {
-        if (isParachute)
+        if (isParachute && currentTimer >= staytTime)
         {
             targetRotation = tiltDown;
         }
@@ -378,7 +382,7 @@ public class Playermanager : MonoBehaviour
             isRightHandDown = false;// 右手が下に動いたかどうかを保存する変数
         }
 
-        if (transform.position.y <= downheight)
+        if (transform.position.y <= downheight && hardware != null)
         {
             hardware.SetParachute(true);
         }
@@ -438,7 +442,11 @@ public class Playermanager : MonoBehaviour
 
             // 着地したする
             StopLoop(); // ループ再生を停止
+            audioSource.volume = 1f;
             PlayOneShot(oneShotClip_1); // 1回再生を開始
+            // 子オブジェクトを非アクティブにする
+            DeactivateChildByName("Parachute");
+            DeactivateChildByName("Rope");
             progressStep = 3; // 次の処理に進む
         }
     }
