@@ -4,18 +4,29 @@ public class RingController : MonoBehaviour
 {
     [SerializeField] private GameObject ringPrefab; // リングのプレハブ
     [SerializeField] private float spawnDistance = 400.0f; // プレイヤーの前方に出現させる距離
+
+    [Tooltip("最初の景色から順番にSkyboxマテリアルを登録します")]
+    [SerializeField] private Material[] skyboxMaterials;
+
     public AudioSource audioSource;
     public AudioClip oneShotClip; // 1回用（SEなど）
     
     private GameObject currentRing;
     private int score = 0;
 
+    // 現在表示しているSkyboxの番号
+    private int currentSkyboxIndex = 0;
+
     // 1回だけ実行するためのフラグ
     private bool hasProcessed = false; 
 
     void Start()
     {
-        
+        // ゲーム開始時は最初の景色を表示
+        if (skyboxMaterials != null && skyboxMaterials.Length > 0)
+        {
+            ChangeSkybox(0);
+        }
     }
 
     void Update()
@@ -54,22 +65,58 @@ public class RingController : MonoBehaviour
     // リングをくぐった（トリガーに触れた）時の処理
     private void OnTriggerEnter(Collider other)
     {
-        // タグが「Ring」の場合
-        if (other.CompareTag("Ring"))
+        if (!other.CompareTag("Ring"))
         {
-            // 得点を加算（例：100点）
-            score += 100;
-            Debug.Log("Score: " + score);
-
-            PlayOneShot();
-
-            // くぐったリングを消去
-            Destroy(other.gameObject);
-
-            // 新しいリングを出現させる
-            SpawnRing();
+            return;
         }
+
+        PlayOneShot();
+
+        // リングをくぐるたびに次のSkyboxへ変更
+        ChangeToNextSkybox();
+
+        // くぐったリングを削除
+        Destroy(other.gameObject);
+        currentRing = null;
+
+        // 次のリングを生成
+        SpawnRing();
     }
+
+    private void ChangeToNextSkybox()
+    {
+        if (skyboxMaterials == null || skyboxMaterials.Length == 0)
+        {
+            return;
+        }
+
+        currentSkyboxIndex++;
+
+        // 最後のSkyboxの次は、最初の景色に戻す
+        if (currentSkyboxIndex >= skyboxMaterials.Length)
+        {
+            currentSkyboxIndex = 0;
+        }
+
+        ChangeSkybox(currentSkyboxIndex);
+    }
+
+    private void ChangeSkybox(int index)
+    {
+        if (skyboxMaterials == null ||
+            index < 0 ||
+            index >= skyboxMaterials.Length ||
+            skyboxMaterials[index] == null)
+        {
+            return;
+        }
+
+        RenderSettings.skybox = skyboxMaterials[index];
+
+        // Skyboxの表示をすぐに更新
+        DynamicGI.UpdateEnvironment();
+    }
+
 
     private void ResetRing()
     {
