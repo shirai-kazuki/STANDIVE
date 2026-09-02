@@ -85,13 +85,16 @@ public class Hardware : MonoBehaviour
 
     void Update()
     {
-        //センサー受信
-        ReceiveSensor();
-
         //パラシュート再設置
         if (Keyboard.current.oKey.wasPressedThisFrame)
         {
-            paratyakutiRoutine = StartCoroutine(ParachuteReset());
+            paratyakutiRoutine = StartCoroutine(ParachuteReset(1));
+        }
+
+        //パラシュート再設置
+        if (Keyboard.current.uKey.wasPressedThisFrame)
+        {
+            paratyakutiRoutine = StartCoroutine(ParachuteReset(2));
         }
 
         //シリンダストップ
@@ -499,31 +502,53 @@ void ReceiveSensor()
     }
 
     //パラシュート再接地
-    IEnumerator ParachuteReset()
+    IEnumerator ParachuteReset(int state)
     {
-        Debug.Log("パラシュート再設置開始");
         SendCommand("C_Relay_NO");
-
         float timer = 0f;
         bool stopSent = false;
-
-        SendCommand("C_Up");
-
-        while (!stopSent)
+        if (state == 1)
         {
-            timer += Time.deltaTime;
-
-            //2秒後
-            if (timer >= 2.0f)
+            Debug.Log("パラシュート再設置開始");
+            SendCommand("C_Up");
+            while (!stopSent)
             {
-                SendCommand("C_Stop");
-                stopSent = true;
+                timer += Time.deltaTime;
 
-                Debug.Log("パラシュート再設置終了");
-                paratyakutiRoutine = null;
+                //2秒後
+                if (timer >= 2.0f)
+                {
+                    SendCommand("C_Stop");
+                    stopSent = true;
+
+                    Debug.Log("パラシュート再設置終了");
+                    paratyakutiRoutine = null;
+                }
+
+                yield return null;
             }
+        }
 
-            yield return null;
+        else if (state == 2)
+        {
+            Debug.Log("パラシュート縮む");
+            SendCommand("C_Down");
+            while (!stopSent)
+            {
+                timer += Time.deltaTime;
+
+                //2秒後
+                if (timer >= 3.0f)
+                {
+                    SendCommand("C_Stop");
+                    stopSent = true;
+
+                    Debug.Log("パラシュート再設置終了");
+                    paratyakutiRoutine = null;
+                }
+
+                yield return null;
+            }
         }
     }
 
