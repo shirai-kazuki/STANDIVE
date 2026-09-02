@@ -37,6 +37,7 @@ public class Playermanager : MonoBehaviour
     private Hardware hardware;
     private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
     public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
+    public bool startTrigger = false;//飛び降りのトリガー
 
     private void Start()
     {
@@ -197,9 +198,17 @@ public class Playermanager : MonoBehaviour
             TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
         }
 
-        if (transform.position.y < height - 10f)
+        if (transform.position.y < height - 10f && !isParachute)
         {
             targetVelocityZ = 0f; // 前に移動しないようにする
+        }
+        if (transform.position.y >= 1f && isParachute)
+        {
+            targetVelocityZ = 4f; // パラシュート
+        }
+        if (transform.position.y < 1f && isParachute)
+        {
+            targetVelocityZ = 0f; // 着地
         }
 
         // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
@@ -216,7 +225,7 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 横に移動しないようにする
         }
 
-        if (transform.position.y < 50f)
+        if (transform.position.y < 42f)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
             currentTimer = 0;
@@ -247,7 +256,7 @@ public class Playermanager : MonoBehaviour
 
     private void TiltPlayer()
     {
-        if (isParachute && currentTimer >= staytTime)
+        if (isParachute && currentTimer >= 0.5f)
         {
             targetRotation = tiltDown;
         }
@@ -344,9 +353,15 @@ public class Playermanager : MonoBehaviour
         // 現在地と目的地の距離を計算
         float distance = Vector3.Distance(transform.position, target.position);
 
+        //ハードウェア追加部分
+        hardware.MoveKaze();
+
         // 距離が閾値以下になったら到着とする
         if (distance <= arrivalThreshold)
         {
+            //ハードウェア追加部分
+            hardware.SetStart(true);
+
             PlayOneShot(oneShotClip_2); // 1回再生を開始
             currentTimer = 0f;
             SetisHandWave(false); // 手を振っていない状態にリセット
@@ -354,10 +369,16 @@ public class Playermanager : MonoBehaviour
         }
     }
 
+    //飛び降りトリガー
+    public void SetStartTrigger(bool value)
+    {
+        startTrigger = value;
+    }
+
     public void SecondProcess()
     {
         //2番目の処理
-        if (currentTimer > staytTime)
+        if (currentTimer > staytTime || startTrigger)
         {
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
@@ -388,7 +409,7 @@ public class Playermanager : MonoBehaviour
         }
 
         // 左手と右手が両方とも下に動いたかを確認
-        if (transform.position.y < downheight && isLeftHandDown && isRightHandDown && !isParachute || transform.position.y < 200f && !isParachute || (parachuteOpen && !isParachute))
+        if (transform.position.y < 200f && !isParachute || (parachuteOpen && !isParachute))
         {
             // パラシュートが開いた状態であることにする
             isParachute = true;
@@ -408,11 +429,14 @@ public class Playermanager : MonoBehaviour
         {
             // ここでループ音の音量を小さくする（0.0 〜 1.0 の間で指定。例は 0.2）
             audioSource.volume = 0.2f;
-            // 子オブジェクトをアクティブにする
-            ActiveChildByName("Parachute");
-            ActiveChildByName("Rope");
-            // 子オブジェクトを非アクティブにする
-            DeactivateChildByName("WindPressure");
+            if (currentTimer >= 0.5f)
+            {
+                // 子オブジェクトをアクティブにする
+                ActiveChildByName("Parachute");
+                ActiveChildByName("Rope");
+                // 子オブジェクトを非アクティブにする
+                DeactivateChildByName("WindPressure");
+            }
 
             //速度を落とす
             if (fallSpeed > 10f)
@@ -427,7 +451,7 @@ public class Playermanager : MonoBehaviour
             fallSpeed = 30f;
         }
 
-        if (transform.position.y < 20f)
+        if (transform.position.y < 30f)
         {
             //ハードウェア追加部分
             if (hardware != null)
