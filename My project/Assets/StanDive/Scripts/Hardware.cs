@@ -103,6 +103,9 @@ public class Hardware : MonoBehaviour
     //ソフトのほうに送る時間用
     public float hardTime = 0f;
 
+    //スタート可能か
+    public bool startOk = false;
+
     private Playermanager playermanager;
 
     void Start()
@@ -193,6 +196,11 @@ public class Hardware : MonoBehaviour
     public void SetParachute(bool value)
     {
         parachuteOK = value;
+    }
+
+    public void SetStart(bool value)
+    {
+        startOk = value;
     }
 
 
@@ -306,6 +314,7 @@ public class Hardware : MonoBehaviour
     public void MoveKaze()
     {
         SendCommand("Kaze");
+        startOk = true;
         Debug.Log("Kaze");
     }
     
@@ -321,9 +330,15 @@ void ReceiveSensor()
 
                 if (data == "P")
                 {
+                    if (startOk)
+                    {
+                        playermanager.SetStartTrigger(true);//飛び降りる
+                        startOk = false;
+                    }
                     if (parachuteOK)
                     {
                         playermanager.SetParachuteOpen(true);//パラシュートの処理を可能にする
+                        parachuteOK = false;
                     }
                 }
 
