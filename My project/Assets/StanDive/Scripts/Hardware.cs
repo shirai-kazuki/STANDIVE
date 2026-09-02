@@ -268,7 +268,7 @@ public class Hardware : MonoBehaviour
         {
             currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", adjustTime, 0, 3));
         }
-        paratyakutiRoutine = StartCoroutine(ParachuteDeploy(adjustTime));
+        paratyakutiRoutine = StartCoroutine(ParachuteDeploy());
 
         //パラシュート後の左右傾き
         maxMove = 2.0f;
@@ -830,7 +830,7 @@ void ReceiveSensor()
     }
 
     //パラシュート提示
-    IEnumerator ParachuteDeploy(float pTime)
+    IEnumerator ParachuteDeploy()
     {
         Debug.Log("パラシュート展開開始");
         SendCommand("C_Relay_NO");
@@ -844,7 +844,7 @@ void ReceiveSensor()
             timer += Time.deltaTime;
 
             // 秒後にC_Retract
-            if (!retractSent && timer >= pTime)
+            if (!retractSent && timer >= 0f)
             {
                 SendCommand("C_Down");
                 retractSent = true;
@@ -900,24 +900,29 @@ void ReceiveSensor()
         SendCommand("C_Relay_NC");
 
         float timer = 0f;
+        bool upSent = false;
         bool retractSent = false;
         bool stopSent = false;
-
-        SendCommand("C_Up");
 
         while (!stopSent)
         {
             timer += Time.deltaTime;
 
+            if (!upSent && timer >= 0.68)
+            {
+                SendCommand("C_Up");
+                upSent = true;
+            }
+
             //5秒後
-            if (!retractSent && timer >= 2.0f)
+            if (!retractSent && timer >= 3.68f)
             {
                 SendCommand("C_Down");
                 retractSent = true;
             }
 
             //10秒後
-            if (!stopSent && timer >= 5.0f)
+            if (!stopSent && timer >= 8.0f)
             {
                 SendCommand("C_Stop");
                 stopSent = true;
