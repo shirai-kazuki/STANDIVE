@@ -198,9 +198,17 @@ public class Playermanager : MonoBehaviour
             TiltPlayer(); // プレイヤーを傾ける処理を呼び出す
         }
 
-        if (transform.position.y < height - 10f)
+        if (transform.position.y < height - 10f && !isParachute)
         {
             targetVelocityZ = 0f; // 前に移動しないようにする
+        }
+        if (transform.position.y >= 1f && isParachute)
+        {
+            targetVelocityZ = 4f; // パラシュート
+        }
+        if (transform.position.y < 1f && isParachute)
+        {
+            targetVelocityZ = 0f; // パラシュート
         }
 
         // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
