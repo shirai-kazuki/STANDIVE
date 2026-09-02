@@ -35,15 +35,6 @@ public class Hardware : MonoBehaviour
     //送風機
     private int sendValue = 94;
 
-
-    //圧力センサ
-
-    //圧力センサーの値
-    private int sensorData1 = 0;
-    private int sensorData2 = 0;
-    private int sensorData3 = 0;
-    private int sensorData4 = 0;
-
     //加圧か排気か（false:加圧　true:排気）
     private bool relay1Off;
     private bool relay2Off;
@@ -57,8 +48,6 @@ public class Hardware : MonoBehaviour
 
     //飛び出し加圧max時間
     private float AirTimeLimit = 1.1f;
-    //飛び出し加圧maxセンサー値
-    private int sensorLimit0 = 600;
 
     //パラシュート後、AirMoveを禁止する
     private bool airMoveLocked = false;
@@ -85,6 +74,8 @@ public class Hardware : MonoBehaviour
 
     void Update()
     {
+        ReceiveSensor();
+
         //パラシュート再設置
         if (Keyboard.current.oKey.wasPressedThisFrame)
         {
@@ -567,14 +558,14 @@ void ReceiveSensor()
         {
             timer += Time.deltaTime;
 
-            if (!upSent && timer >= 0.8)
+            if (!upSent && timer >= 1.3f)
             {
                 SendCommand("C_Up");
                 upSent = true;
             }
 
             //5秒後
-            if (!retractSent && timer >= 3.8f)
+            if (!retractSent && timer >= 4.3f)
             {
                 SendCommand("C_Down");
                 retractSent = true;

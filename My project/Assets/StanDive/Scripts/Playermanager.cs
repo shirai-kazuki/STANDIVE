@@ -225,7 +225,7 @@ public class Playermanager : MonoBehaviour
             targetVelocityX = 0f; // 横に移動しないようにする
         }
 
-        if (transform.position.y < 50f)
+        if (transform.position.y < 42f)
         {
             targetVelocityX = 0f; // 横に移動しないようにする
             currentTimer = 0;
