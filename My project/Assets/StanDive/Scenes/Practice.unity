@@ -7438,6 +7438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hardware
   parachuteOK: 0
   hardTime: 0
+  startOk: 0
 --- !u!4 &509135209
 Transform:
   m_ObjectHideFlags: 0
@@ -21561,7 +21562,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1876, y: 1750, z: 3040.5693}
-  m_LocalScale: {x: 1, y: 3500.664, z: 1}
+  m_LocalScale: {x: 1, y: 3500.664, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1863922622}
@@ -22465,6 +22466,7 @@ MonoBehaviour:
   oneShotClip_2: {fileID: 8300000, guid: 3e11bfadb7f75704ab3b4750ad5e0d1f, type: 3}
   nPCOrientationHandler: {fileID: 1166901046}
   parachuteOpen: 0
+  startTrigger: 0
 --- !u!54 &1166901040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24246,7 +24248,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2335, y: 1750, z: 3040.5693}
-  m_LocalScale: {x: 1, y: 3500.664, z: 1}
+  m_LocalScale: {x: 1, y: 3500.664, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1863922622}
@@ -41522,7 +41524,7 @@ TerrainCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: 9d8024b9e1f867641b938053e5df9c66, type: 2}
-  m_EnableTreeColliders: 1
+  m_EnableTreeColliders: 0
 --- !u!4 &206889949428296330
 Transform:
   m_ObjectHideFlags: 0
