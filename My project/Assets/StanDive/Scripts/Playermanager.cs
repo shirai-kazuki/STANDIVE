@@ -222,9 +222,13 @@ public class Playermanager : MonoBehaviour
         {
             ringController.ChangePSkybox(0);
         }
-        if (transform.position.y < 250f && isParachute)
+        if (transform.position.y < 300f && isParachute)
         {
             ringController.ChangePSkybox(4);
+        }
+        if (transform.position.y < 150f && isParachute)
+        {
+            ringController.ChangePSkybox(5);
         }
 
 
