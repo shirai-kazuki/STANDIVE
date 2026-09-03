@@ -101,6 +101,11 @@ public class RingController : MonoBehaviour
         ChangeSkybox(currentSkyboxIndex);
     }
 
+    public void ChangePSkybox(int index)
+    {
+        ChangeSkybox(index);
+    }
+
     private void ChangeSkybox(int index)
     {
         if (skyboxMaterials == null ||

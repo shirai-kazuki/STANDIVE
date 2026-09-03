@@ -39,6 +39,9 @@ public class Playermanager : MonoBehaviour
     public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
     public bool startTrigger = false;//飛び降りのトリガー
 
+    //RingController追加部分
+    private RingController ringController;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -65,6 +68,9 @@ public class Playermanager : MonoBehaviour
 
         //ハードウェア追加部分
         hardware = FindAnyObjectByType<Hardware>();
+
+        //RingController追加部分
+        ringController = FindAnyObjectByType<RingController>();
     }
 
     private void FixedUpdate()
@@ -210,6 +216,17 @@ public class Playermanager : MonoBehaviour
         {
             targetVelocityZ = 0f; // 着地
         }
+
+        //パラシュート中に景色を変える
+        if (transform.position.y < 450f && isParachute)
+        {
+            ringController.ChangePSkybox(0);
+        }
+        if (transform.position.y < 250f && isParachute)
+        {
+            ringController.ChangePSkybox(4);
+        }
+
 
         // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
         // 【最重要】ゴーグル未接続時に rb.linearVelocity.x が「計算不能(NaN)」になるバグを防ぐため、
