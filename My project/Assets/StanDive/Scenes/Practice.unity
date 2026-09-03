@@ -22613,7 +22613,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 4610e474df7d2744ba77e8bc94e6886b, type: 2}
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   - {fileID: 2100000, guid: daf83db099266224eaa827bd909d9916, type: 2}
-  - {fileID: 2100000, guid: 02083e29a3ae2234abe76540d6be3657, type: 2}
   audioSource: {fileID: 1836464923}
   oneShotClip: {fileID: 8300000, guid: 34976b4066cc6b846bcbb29214f5bde6, type: 3}
 --- !u!114 &1166901046
