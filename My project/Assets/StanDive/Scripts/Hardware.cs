@@ -160,6 +160,7 @@ public class Hardware : MonoBehaviour
         AirMove = true;
         currentRoutine = StartCoroutine(MoveToStop("AB_Up", startMove, 0, 0));
         //送信コマンド,アクチュエーター動作リミット時間,動作時間用ステータス,圧力用ステータス
+        startOk = false;
     }
 
     //右移動

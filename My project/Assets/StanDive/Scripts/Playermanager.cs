@@ -39,6 +39,8 @@ public class Playermanager : MonoBehaviour
     public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
     public bool startTrigger = false;//飛び降りのトリガー
 
+    private RingController ringController;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -65,6 +67,8 @@ public class Playermanager : MonoBehaviour
 
         //ハードウェア追加部分
         hardware = FindAnyObjectByType<Hardware>();
+
+        ringController = FindAnyObjectByType<RingController>();
     }
 
     private void FixedUpdate()
@@ -209,6 +213,15 @@ public class Playermanager : MonoBehaviour
         if (transform.position.y < 1f && isParachute)
         {
             targetVelocityZ = 0f; // 着地
+        }
+
+        if (transform.position.y < 450f && isParachute)
+        {
+            ringController.ChangePSkybox(0);
+        }
+        if (transform.position.y < 250f && isParachute)
+        {
+            ringController.ChangePSkybox(4);
         }
 
         // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
