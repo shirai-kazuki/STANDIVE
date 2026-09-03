@@ -30,7 +30,7 @@ public class Playermanager : MonoBehaviour
     public AudioClip oneShotClip_1; // 1回用（SEなど）
     public AudioClip oneShotClip_2; // 1回用（SEなど）
     private float currentTimer = 0f; //時間を計測するためのタイマー変数
-    private float staytTime = 3f; //待ち時間の変数
+    private float staytTime = 10f; //待ち時間の変数
     public NPCOrientationHandler nPCOrientationHandler;
 
     //ハードウェア追加部分
@@ -329,6 +329,12 @@ public class Playermanager : MonoBehaviour
         parachuteOpen = value;
     }
 
+    //飛び降りトリガー
+    public void SetStartTrigger(bool value)
+    {
+        startTrigger = value;
+    }
+
     public Vector3 GetPlayerPosition()
     {
         return transform.position;
@@ -354,34 +360,39 @@ public class Playermanager : MonoBehaviour
         float distance = Vector3.Distance(transform.position, target.position);
 
         //ハードウェア追加部分
-        hardware.MoveKaze();
+        if (hardware != null)
+        {
+            hardware.MoveKaze();
+        }
 
         // 距離が閾値以下になったら到着とする
         if (distance <= arrivalThreshold)
         {
             //ハードウェア追加部分
-            hardware.SetStart(true);
+            if (hardware != null)
+            {
+                hardware.SetStart(true);
+            }
 
-            PlayOneShot(oneShotClip_2); // 1回再生を開始
             currentTimer = 0f;
             SetisHandWave(false); // 手を振っていない状態にリセット
             progressStep = 1; // 次の処理に進む
         }
     }
 
-    //飛び降りトリガー
-    public void SetStartTrigger(bool value)
-    {
-        startTrigger = value;
-    }
-
     public void SecondProcess()
     {
         //2番目の処理
+        if (currentTimer > 6f && !audioSource.isPlaying)
+        {
+            PlayOneShot(oneShotClip_2); // 1回再生を開始
+        }
         if (currentTimer > staytTime || startTrigger)
         {
+            audioSource.Stop();
             PlayLoop(); // ループ再生を開始
             progressStep = 2; // 次の処理に進む
+            staytTime = 3f;
             currentTimer = 0f;
 
             //ハードウェア追加部分
