@@ -39,6 +39,14 @@ public class Playermanager : MonoBehaviour
     public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
     public bool startTrigger = false;//飛び降りのトリガー
 
+    private bool A = true;
+    private bool B = true;
+    private bool C = true;
+    private bool D = true;
+
+    //振動子
+    private Foot foot;
+
     private RingController ringController;
 
     private void Start()
@@ -67,6 +75,7 @@ public class Playermanager : MonoBehaviour
 
         //ハードウェア追加部分
         hardware = FindAnyObjectByType<Hardware>();
+        foot = FindAnyObjectByType<Foot>();
 
         ringController = FindAnyObjectByType<RingController>();
     }
@@ -215,13 +224,37 @@ public class Playermanager : MonoBehaviour
             targetVelocityZ = 0f; // 着地
         }
 
+        if (transform.position.y < 630f && isParachute)
+        {
+            if (A)
+            {
+                ringController.ChangePSkybox();
+                A = false;
+            }
+        }
         if (transform.position.y < 450f && isParachute)
         {
-            ringController.ChangePSkybox(0);
+            if (B)
+            {
+                ringController.ChangePSkybox();
+                B = false;
+            }
         }
-        if (transform.position.y < 250f && isParachute)
+        if (transform.position.y < 300f && isParachute)
         {
-            ringController.ChangePSkybox(4);
+            if (C)
+            {
+                ringController.ChangePSkybox();
+                C = false;
+            }
+        }
+        if (transform.position.y < 150f && isParachute)
+        {
+            if (D)
+            {
+                ringController.ChangePSkybox();
+                D = false;
+            }
         }
 
         // 3. 最後にすべての速度（X, Y, Z）を1回だけまとめて適用する
@@ -373,9 +406,10 @@ public class Playermanager : MonoBehaviour
         float distance = Vector3.Distance(transform.position, target.position);
 
         //ハードウェア追加部分
-        if (hardware != null)
+        if (hardware != null && foot != null)
         {
             hardware.MoveKaze();
+            foot.startFoot();
         }
 
         // 距離が閾値以下になったら到着とする
@@ -487,7 +521,10 @@ public class Playermanager : MonoBehaviour
 
         if (transform.position.y < 1f)
         {
-
+            if(foot != null)
+            {
+                foot.stopFoot();
+            }
             // 着地したする
             StopLoop(); // ループ再生を停止
             audioSource.volume = 1f;
