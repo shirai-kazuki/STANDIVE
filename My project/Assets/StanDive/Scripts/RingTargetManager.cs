@@ -58,7 +58,14 @@ public class RingTargetManager : MonoBehaviour
             Vector3 pos = childTransform.position;
             if(playermanager.GetIsParachute())
             {
-                pos.y = transform.position.y;
+                if (childTransform.name == "Target7")
+                {
+                    pos.y = transform.position.y + 200f;
+                }
+                else
+                {
+                    pos.y = transform.position.y;
+                }
             }
             else
             {

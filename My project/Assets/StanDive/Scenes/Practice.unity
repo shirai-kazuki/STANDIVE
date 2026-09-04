@@ -7438,6 +7438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hardware
   parachuteOK: 0
   hardTime: 0
+  startOk: 0
 --- !u!4 &509135209
 Transform:
   m_ObjectHideFlags: 0
@@ -8225,7 +8226,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Please open your parachute.
+  m_text: open
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8252,8 +8253,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 360
+  m_fontSizeBase: 360
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -21561,7 +21562,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1876, y: 1750, z: 3040.5693}
-  m_LocalScale: {x: 1, y: 3500.664, z: 1}
+  m_LocalScale: {x: 1, y: 3500.664, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1863922622}
@@ -22465,6 +22466,7 @@ MonoBehaviour:
   oneShotClip_2: {fileID: 8300000, guid: 3e11bfadb7f75704ab3b4750ad5e0d1f, type: 3}
   nPCOrientationHandler: {fileID: 1166901046}
   parachuteOpen: 0
+  startTrigger: 0
 --- !u!54 &1166901040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22607,12 +22609,14 @@ MonoBehaviour:
   spawnDistance: 500
   skyboxMaterials:
   - {fileID: 2100000, guid: 3e5399bd195de7649b874f58c1b9f8a3, type: 2}
+  - {fileID: 2100000, guid: f9bfa414ef7c4cb42b22186caed87cc9, type: 2}
+  - {fileID: 2100000, guid: 84a361286e05e3d47acc724aac61d01e, type: 2}
   - {fileID: 2100000, guid: daf83db099266224eaa827bd909d9916, type: 2}
-  - {fileID: 2100000, guid: a08eb8b0e2fc6f1418c609272923c08c, type: 2}
-  - {fileID: 2100000, guid: d3abb9164cd5ece4c95f23c94161f9d2, type: 2}
+  - {fileID: 2100000, guid: 4cc187f1b7e997943b96337f545ba4ff, type: 2}
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   audioSource: {fileID: 1836464923}
   oneShotClip: {fileID: 8300000, guid: 34976b4066cc6b846bcbb29214f5bde6, type: 3}
+  playermanager: {fileID: 1166901039}
 --- !u!114 &1166901046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24246,7 +24250,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2335, y: 1750, z: 3040.5693}
-  m_LocalScale: {x: 1, y: 3500.664, z: 1}
+  m_LocalScale: {x: 1, y: 3500.664, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1863922622}
@@ -41522,7 +41526,7 @@ TerrainCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: 9d8024b9e1f867641b938053e5df9c66, type: 2}
-  m_EnableTreeColliders: 1
+  m_EnableTreeColliders: 0
 --- !u!4 &206889949428296330
 Transform:
   m_ObjectHideFlags: 0
