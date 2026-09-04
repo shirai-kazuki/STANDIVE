@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections; // 【追加】3秒後に音を止めるため
 
 public class RingController : MonoBehaviour
 {
@@ -8,9 +9,20 @@ public class RingController : MonoBehaviour
     [Tooltip("最初の景色から順番にSkyboxマテリアルを登録します")]
     [SerializeField] private Material[] skyboxMaterials;
 
+    // 【追加】各Skyboxに対応する音
+    [Header("Skybox切り替え音")]
+    [Tooltip("Skyboxと同じ順番で音声ファイルを登録します")]
+    [SerializeField] private AudioClip[] skyboxAudioClips;
+
+    // 【追加】Skybox切り替え音専用のAudioSource
+    [SerializeField] private AudioSource skyboxAudioSource;
+
+    // 【追加】音を再生する時間
+    [SerializeField] private float skyboxAudioDuration = 3.0f;
+
     public AudioSource audioSource;
     public AudioClip oneShotClip; // 1回用（SEなど）
-    
+
     private GameObject currentRing;
     private int score = 0;
 
@@ -18,9 +30,9 @@ public class RingController : MonoBehaviour
     private int currentSkyboxIndex = 0;
 
     // 1回だけ実行するためのフラグ
-    private bool hasProcessed = false; 
+    private bool hasProcessed = false;
 
-    public Playermanager playermanager; 
+    public Playermanager playermanager;
 
     void Start()
     {
@@ -33,13 +45,13 @@ public class RingController : MonoBehaviour
 
     void Update()
     {
-        if(transform.position.y < 3100f && !hasProcessed)
+        if (transform.position.y < 3100f && !hasProcessed)
         {
             SpawnRing();
             hasProcessed = true;
         }
 
-        if(playermanager.GetIsParachute())
+        if (playermanager.GetIsParachute())
         {
             Destroy(currentRing);
             currentRing = null;
@@ -59,13 +71,17 @@ public class RingController : MonoBehaviour
         {
             // Playerの前方、ランダムな高さ（Y軸）にリングを生成
             Vector3 spawnPos = transform.position;
-            spawnPos.y -= spawnDistance; 
+            spawnPos.y -= spawnDistance;
             spawnPos.x += Random.Range(-100.0f, 100.0f);
 
             // Playerと同じ向きにリングを生成
             if (transform.position.y > 700f)
             {
-                currentRing = Instantiate(ringPrefab, spawnPos, Quaternion.Euler(0f, 0f, 0f));
+                currentRing = Instantiate(
+                    ringPrefab,
+                    spawnPos,
+                    Quaternion.Euler(0f, 0f, 0f)
+                );
             }
         }
     }
@@ -78,10 +94,12 @@ public class RingController : MonoBehaviour
             return;
         }
 
-        PlayOneShot();
 
         // リングをくぐるたびに次のSkyboxへ変更
         ChangeToNextSkybox();
+
+        // 【追加】変更後のSkyboxに対応する音を再生
+        PlaySkyboxAudio(currentSkyboxIndex);
 
         // くぐったリングを削除
         Destroy(other.gameObject);
@@ -130,6 +148,49 @@ public class RingController : MonoBehaviour
         DynamicGI.UpdateEnvironment();
     }
 
+    // 【追加】対応するSkyboxの音を再生
+    private void PlaySkyboxAudio(int index)
+    {
+        if (skyboxAudioSource == null ||
+            skyboxAudioClips == null ||
+            index < 0 ||
+            index >= skyboxAudioClips.Length ||
+            skyboxAudioClips[index] == null)
+        {
+            return;
+        }
+
+        // 前の音が再生中なら停止
+        skyboxAudioSource.Stop();
+
+        skyboxAudioSource.clip = skyboxAudioClips[index];
+        skyboxAudioSource.loop = false;
+        skyboxAudioSource.Play();
+
+        // 約3秒後に停止する
+        StartCoroutine(
+            StopSkyboxAudioAfterSeconds(
+                skyboxAudioClips[index],
+                skyboxAudioDuration
+            )
+        );
+    }
+
+    // 【追加】指定時間後に音を停止
+    private IEnumerator StopSkyboxAudioAfterSeconds(
+        AudioClip playingClip,
+        float seconds
+    )
+    {
+        yield return new WaitForSeconds(seconds);
+
+        // その間に別のSkybox音へ変わっていない場合だけ停止
+        if (skyboxAudioSource != null &&
+            skyboxAudioSource.clip == playingClip)
+        {
+            skyboxAudioSource.Stop();
+        }
+    }
 
     private void ResetRing()
     {
@@ -141,7 +202,6 @@ public class RingController : MonoBehaviour
     public void PlayOneShot()
     {
         // loop設定に関係なく1回だけ再生
-        audioSource.PlayOneShot(oneShotClip, 1f); // 1fは音量の倍率（0.0～1.0）
+        audioSource.PlayOneShot(oneShotClip, 1f);
     }
 }
-
