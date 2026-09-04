@@ -41,6 +41,9 @@ public class Playermanager : MonoBehaviour
 
     //RingController追加部分
     private RingController ringController;
+    private bool A = true;
+    private bool B = true;
+    private bool C = true;
 
     private void Start()
     {
@@ -218,13 +221,29 @@ public class Playermanager : MonoBehaviour
         }
 
         //パラシュート中に景色を変える
-        if (transform.position.y < 450f && isParachute)
+        if (transform.position.y < 600f && isParachute)
         {
-            ringController.ChangePSkybox(0);
+            if (A)
+            {
+                ringController.ChangePSkybox();
+                A = false;
+            }
         }
-        if (transform.position.y < 250f && isParachute)
+        if (transform.position.y < 400f && isParachute)
         {
-            ringController.ChangePSkybox(4);
+            if (B)
+            {
+                ringController.ChangePSkybox();
+                B = false;
+            }
+        }
+        if (transform.position.y < 150f && isParachute)
+        {
+            if (C)
+            {
+                ringController.ChangePSkybox();
+                C = false;
+            }
         }
 
 

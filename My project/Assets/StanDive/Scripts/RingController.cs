@@ -3,7 +3,7 @@ using UnityEngine;
 public class RingController : MonoBehaviour
 {
     [SerializeField] private GameObject ringPrefab; // リングのプレハブ
-    [SerializeField] private float spawnDistance = 400.0f; // プレイヤーの前方に出現させる距離
+    [SerializeField] private float spawnDistance = 579.0f; // プレイヤーの前方に出現させる距離
 
     [Tooltip("最初の景色から順番にSkyboxマテリアルを登録します")]
     [SerializeField] private Material[] skyboxMaterials;
@@ -101,9 +101,9 @@ public class RingController : MonoBehaviour
         ChangeSkybox(currentSkyboxIndex);
     }
 
-    public void ChangePSkybox(int index)
+    public void ChangePSkybox()
     {
-        ChangeSkybox(index);
+        ChangeToNextSkybox();
     }
 
     private void ChangeSkybox(int index)
