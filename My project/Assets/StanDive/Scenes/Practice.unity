@@ -22615,6 +22615,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: daf83db099266224eaa827bd909d9916, type: 2}
   audioSource: {fileID: 1836464923}
   oneShotClip: {fileID: 8300000, guid: 34976b4066cc6b846bcbb29214f5bde6, type: 3}
+  playermanager: {fileID: 1166901039}
 --- !u!114 &1166901046
 MonoBehaviour:
   m_ObjectHideFlags: 0

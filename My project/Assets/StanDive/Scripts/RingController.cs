@@ -20,6 +20,8 @@ public class RingController : MonoBehaviour
     // 1回だけ実行するためのフラグ
     private bool hasProcessed = false; 
 
+    public Playermanager playermanager; 
+
     void Start()
     {
         // ゲーム開始時は最初の景色を表示
@@ -35,6 +37,12 @@ public class RingController : MonoBehaviour
         {
             SpawnRing();
             hasProcessed = true;
+        }
+
+        if(playermanager.GetIsParachute())
+        {
+            Destroy(currentRing);
+            currentRing = null;
         }
 
         if (currentRing == null) return;
