@@ -63,7 +63,7 @@ public class RingController : MonoBehaviour
             spawnPos.x += Random.Range(-100.0f, 100.0f);
 
             // Playerと同じ向きにリングを生成
-            if (transform.position.y > 700f)
+            if (transform.position.y > playermanager.GetDownheight() + spawnDistance)
             {
                 currentRing = Instantiate(ringPrefab, spawnPos, Quaternion.Euler(0f, 0f, 0f));
             }
