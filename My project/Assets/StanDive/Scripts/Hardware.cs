@@ -243,7 +243,6 @@ public class Hardware : MonoBehaviour
     public void MoveKaze()
     {
         SendCommand("Kaze");
-        Debug.Log("Kaze");
     }
 
 
@@ -461,7 +460,6 @@ public class Hardware : MonoBehaviour
     //パラシュート提示
     IEnumerator ParachuteDeploy()
     {
-        Debug.Log("パラシュート展開開始");
         SendCommand("C_Relay_NO");
 
         float timer = 0f;
@@ -500,7 +498,6 @@ public class Hardware : MonoBehaviour
         bool stopSent = false;
         if (state == 1)
         {
-            Debug.Log("パラシュート再設置開始");
             SendCommand("C_Up");
             while (!stopSent)
             {
@@ -521,7 +518,6 @@ public class Hardware : MonoBehaviour
 
         else if (state == 2)
         {
-            Debug.Log("パラシュート縮む");
             SendCommand("C_Down");
             while (!stopSent)
             {
@@ -544,7 +540,6 @@ public class Hardware : MonoBehaviour
     //着地感覚提示
     IEnumerator LandingImpact()
     {
-        Debug.Log("着地感覚提示開始");
         SendCommand("C_Relay_NC");
 
         float timer = 0f;
@@ -589,7 +584,6 @@ public class Hardware : MonoBehaviour
         if (serial != null && serial.IsOpen)
         {
             serial.WriteLine(command);
-            Debug.Log("Sent: " + command);
         }
     }
 
