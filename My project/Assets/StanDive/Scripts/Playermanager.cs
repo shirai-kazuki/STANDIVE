@@ -33,6 +33,10 @@ public class Playermanager : MonoBehaviour
     private float staytTime = 10f; //待ち時間の変数
     public NPCOrientationHandler nPCOrientationHandler;
 
+    [Header("雲の設定")]
+    [Tooltip("パラシュートが開いたときに非表示にするcloudオブジェクト")]
+    [SerializeField] private GameObject cloud;
+
     //ハードウェア追加部分
     private Hardware hardware;
     private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
@@ -473,6 +477,12 @@ public class Playermanager : MonoBehaviour
             isParachute = true;
             maxSpeed = 10f;
             currentTimer = 0f;
+
+            // パラシュートが開いた瞬間から雲を非表示にする
+            if (cloud != null)
+            {
+                cloud.SetActive(false);
+            }
 
             //ハードウェア追加部分
             if (hardware != null)
