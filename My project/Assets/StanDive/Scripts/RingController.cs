@@ -114,7 +114,7 @@ public class RingController : MonoBehaviour
         int nextIndex;
         do
         {
-            nextIndex = UnityEngine.Random.Range(0, 6); // 0から5のランダムな整数
+            nextIndex = UnityEngine.Random.Range(0, 9); // 0から5のランダムな整数
         }
         while (nextIndex == currentSkyboxIndex);
 
