@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class RingController : MonoBehaviour
 {
@@ -32,6 +33,16 @@ public class RingController : MonoBehaviour
     [SerializeField]
     private Playermanager playermanager;
 
+
+    [Header("リング通過時の加速ぼかし")]
+    [SerializeField] private Volume accelerationBlurVolume;
+
+    [SerializeField] private float blurFadeInTime = 0.15f;
+    [SerializeField] private float blurHoldTime = 0.2f;
+    [SerializeField] private float blurFadeOutTime = 0.65f;
+
+    private Coroutine blurCoroutine;
+
     private GameObject currentRing;
 
     // 現在表示しているSkyboxの番号
@@ -52,6 +63,10 @@ public class RingController : MonoBehaviour
         {
             currentSkyboxIndex = 0;
             ChangeSkybox(currentSkyboxIndex);
+        }
+        if (accelerationBlurVolume != null)
+        {
+            accelerationBlurVolume.weight = 0f;
         }
     }
 
@@ -136,12 +151,16 @@ public class RingController : MonoBehaviour
         // リング通過時のみ共通の音を再生
         PlayRingPassAudio();
 
+        PlayAccelerationBlur();
+
         // くぐったリングを削除
         Destroy(other.gameObject);
         currentRing = null;
 
         // 次のリングを生成
         SpawnRing();
+
+
     }
 
     private void ChangeToNextSkybox()
@@ -274,5 +293,66 @@ public class RingController : MonoBehaviour
 
         // 失敗時はSkyboxを変更せず、次のリングを生成
         SpawnRing();
+    }
+
+    private void PlayAccelerationBlur()
+    {
+        if (accelerationBlurVolume == null)
+        {
+            Debug.LogWarning(
+                "Acceleration Blur Volumeが登録されていません。"
+            );
+            return;
+        }
+
+        if (blurCoroutine != null)
+        {
+            StopCoroutine(blurCoroutine);
+        }
+
+        blurCoroutine = StartCoroutine(AccelerationBlurRoutine());
+    }
+
+    private IEnumerator AccelerationBlurRoutine()
+    {
+        // ぼかしを徐々に強くする
+        float elapsedTime = 0f;
+
+        while (elapsedTime < blurFadeInTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            accelerationBlurVolume.weight = Mathf.Lerp(
+                0f,
+                1f,
+                elapsedTime / blurFadeInTime
+            );
+
+            yield return null;
+        }
+
+        accelerationBlurVolume.weight = 1f;
+
+        // 最大のぼかしを少し維持
+        yield return new WaitForSeconds(blurHoldTime);
+
+        // ぼかしを徐々に弱くする
+        elapsedTime = 0f;
+
+        while (elapsedTime < blurFadeOutTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            accelerationBlurVolume.weight = Mathf.Lerp(
+                1f,
+                0f,
+                elapsedTime / blurFadeOutTime
+            );
+
+            yield return null;
+        }
+
+        accelerationBlurVolume.weight = 0f;
+        blurCoroutine = null;
     }
 }
