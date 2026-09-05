@@ -318,8 +318,6 @@ public class Hardware : MonoBehaviour
         //パラシュート
         if (nowState == 3 && AirMove)
         {
-            SendCommand("V");
-
             relay1Off = true;//排気
             relay2Off = true;
             relay3Off = true;
@@ -421,9 +419,15 @@ public class Hardware : MonoBehaviour
 
         if (nowState == 3 || nowState == 4)
         {
-            if (nowState == 4)
+            if(nowState == 3)
+            {
+                SendCommand("V");
+                Debug.Log("A");
+            }
+            else if (nowState == 4)
             {
                 SendCommand("X");
+                Debug.Log("B");
             }
 
             currentTimer = 0f;
