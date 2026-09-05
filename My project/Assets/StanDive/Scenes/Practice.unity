@@ -22509,6 +22509,7 @@ MonoBehaviour:
   oneShotClip_1: {fileID: 8300000, guid: 75772b87025bdce47adefe9bd52a8caa, type: 3}
   oneShotClip_2: {fileID: 8300000, guid: 3e11bfadb7f75704ab3b4750ad5e0d1f, type: 3}
   nPCOrientationHandler: {fileID: 1166901046}
+  cloud: {fileID: 2143352014}
   parachuteOpen: 0
   startTrigger: 0
 --- !u!54 &1166901040
@@ -22660,7 +22661,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   - {fileID: 2100000, guid: a08eb8b0e2fc6f1418c609272923c08c, type: 2}
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
-  ringPassClip: {fileID: 8300000, guid: 685b1ddfaea77a94f80a00f8639dc134, type: 3}
+  ringPassClip: {fileID: 8300000, guid: 3e11bfadb7f75704ab3b4750ad5e0d1f, type: 3}
   ringAudioSource: {fileID: 1836464923}
   ringAudioDuration: 3
   playermanager: {fileID: 1166901039}
