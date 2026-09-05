@@ -93,8 +93,6 @@ public class RingController : MonoBehaviour
         {
             return;
         }
-
-
         // リングをくぐるたびに次のSkyboxへ変更
         ChangeToNextSkybox();
 
