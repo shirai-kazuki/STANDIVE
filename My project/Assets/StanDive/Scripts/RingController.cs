@@ -1,103 +1,140 @@
 using UnityEngine;
-using System.Collections; // 【追加】3秒後に音を止めるため
+using System.Collections;
 
 public class RingController : MonoBehaviour
 {
-    [SerializeField] private GameObject ringPrefab; // リングのプレハブ
-    [SerializeField] private float spawnDistance = 578.0f; // プレイヤーの前方に出現させる距離
+    [Header("リング設定")]
+    [SerializeField]
+    private GameObject ringPrefab;
 
+    [SerializeField]
+    private float spawnDistance = 578.0f;
+
+    [Header("Skybox設定")]
     [Tooltip("最初の景色から順番にSkyboxマテリアルを登録します")]
-    [SerializeField] private Material[] skyboxMaterials;
+    [SerializeField]
+    private Material[] skyboxMaterials;
 
-    // 【追加】各Skyboxに対応する音
-    [Header("Skybox切り替え音")]
-    [Tooltip("Skyboxと同じ順番で音声ファイルを登録します")]
-    [SerializeField] private AudioClip[] skyboxAudioClips;
+    [Header("リング通過時の音")]
+    [Tooltip("リングを通過したときに再生する音です")]
+    [SerializeField]
+    private AudioClip ringPassClip;
 
-    // 【追加】Skybox切り替え音専用のAudioSource
-    [SerializeField] private AudioSource skyboxAudioSource;
+    [Tooltip("リング通過音を再生するAudioSourceです")]
+    [SerializeField]
+    private AudioSource ringAudioSource;
 
-    // 【追加】音を再生する時間
-    [SerializeField] private float skyboxAudioDuration = 3.0f;
+    [Tooltip("リング通過音を再生する秒数です")]
+    [SerializeField]
+    private float ringAudioDuration = 3.0f;
 
-    public AudioSource audioSource;
-    public AudioClip oneShotClip; // 1回用（SEなど）
+    [Header("Player設定")]
+    [SerializeField]
+    private Playermanager playermanager;
 
     private GameObject currentRing;
-    private int score = 0;
 
     // 現在表示しているSkyboxの番号
     private int currentSkyboxIndex = 0;
 
-    // 1回だけ実行するためのフラグ
+    // 最初のリングを1回だけ生成するためのフラグ
     private bool hasProcessed = false;
 
-    public Playermanager playermanager;
+    // 音声停止用コルーチン
+    private Coroutine stopAudioCoroutine;
 
     void Start()
     {
-        // ゲーム開始時は最初の景色を表示
-        if (skyboxMaterials != null && skyboxMaterials.Length > 0)
+        // ゲーム開始時は最初のSkyboxを表示
+        // 開始時には音を鳴らさない
+        if (skyboxMaterials != null &&
+            skyboxMaterials.Length > 0)
         {
-            ChangeSkybox(0);
+            currentSkyboxIndex = 0;
+            ChangeSkybox(currentSkyboxIndex);
         }
     }
 
     void Update()
     {
+        // 高度3100未満になったときに最初のリングを生成
         if (transform.position.y < 3100f && !hasProcessed)
         {
             SpawnRing();
             hasProcessed = true;
         }
 
-        if (playermanager.GetIsParachute())
+        // パラシュートを開いたらリングを削除
+        if (playermanager != null &&
+            playermanager.GetIsParachute())
         {
-            Destroy(currentRing);
-            currentRing = null;
+            if (currentRing != null)
+            {
+                Destroy(currentRing);
+                currentRing = null;
+            }
         }
 
-        if (currentRing == null) return;
+        if (currentRing == null)
+        {
+            return;
+        }
 
-        if (transform.position.y < currentRing.transform.position.y)
+        // リングをくぐらずに下へ通過した場合
+        if (transform.position.y <
+            currentRing.transform.position.y)
         {
             ResetRing();
         }
     }
 
-    void SpawnRing()
+    private void SpawnRing()
     {
-        if (ringPrefab != null)
+        if (ringPrefab == null)
         {
-            // Playerの前方、ランダムな高さ（Y軸）にリングを生成
-            Vector3 spawnPos = transform.position;
-            spawnPos.y -= spawnDistance;
-            spawnPos.x += Random.Range(-100.0f, 100.0f);
+            return;
+        }
 
-            // Playerと同じ向きにリングを生成
-            if (transform.position.y > playermanager.GetDownheight() + spawnDistance)
-            {
-                currentRing = Instantiate(
-                    ringPrefab,
-                    spawnPos,
-                    Quaternion.Euler(0f, 0f, 0f)
-                );
-            }
+        if (playermanager == null)
+        {
+            Debug.LogWarning(
+                "RingControllerにPlayermanagerが登録されていません。"
+            );
+            return;
+        }
+
+        // プレイヤーより下方にリングを配置
+        Vector3 spawnPos = transform.position;
+        spawnPos.y -= spawnDistance;
+
+        // リングの左右位置をランダムにする
+        spawnPos.x += Random.Range(-100.0f, 100.0f);
+
+        // パラシュート展開高度より十分上にいる場合のみ生成
+        if (transform.position.y >
+            playermanager.GetDownheight() + spawnDistance)
+        {
+            currentRing = Instantiate(
+                ringPrefab,
+                spawnPos,
+                Quaternion.Euler(0f, 0f, 0f)
+            );
         }
     }
 
-    // リングをくぐった（トリガーに触れた）時の処理
+    // リングをくぐったときの処理
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Ring"))
         {
             return;
         }
-        // リングをくぐるたびに次のSkyboxへ変更
+
+        // 次のSkyboxへ変更
         ChangeToNextSkybox();
 
-        // 【追加】変更後のSkyboxに対応する音を再生
-        PlaySkyboxAudio(currentSkyboxIndex);
+        // リング通過時のみ共通の音を再生
+        PlayRingPassAudio();
 
         // くぐったリングを削除
         Destroy(other.gameObject);
@@ -109,14 +146,15 @@ public class RingController : MonoBehaviour
 
     private void ChangeToNextSkybox()
     {
-        if (skyboxMaterials == null || skyboxMaterials.Length == 0)
+        if (skyboxMaterials == null ||
+            skyboxMaterials.Length == 0)
         {
             return;
         }
 
         currentSkyboxIndex++;
 
-        // 最後のSkyboxの次は、最初の景色に戻す
+        // 最後のSkyboxの次は最初に戻る
         if (currentSkyboxIndex >= skyboxMaterials.Length)
         {
             currentSkyboxIndex = 0;
@@ -125,16 +163,35 @@ public class RingController : MonoBehaviour
         ChangeSkybox(currentSkyboxIndex);
     }
 
+    // 外部から呼び出すランダムSkybox変更
+    // この処理では音を鳴らさない
     public void ChangePSkybox()
     {
+        if (skyboxMaterials == null ||
+            skyboxMaterials.Length == 0)
+        {
+            return;
+        }
+
+        // Skyboxが1個しかない場合
+        if (skyboxMaterials.Length == 1)
+        {
+            currentSkyboxIndex = 0;
+            ChangeSkybox(currentSkyboxIndex);
+            return;
+        }
+
         int nextIndex;
+
         do
         {
-            nextIndex = UnityEngine.Random.Range(0, 6); // 0から5のランダムな整数
+            nextIndex = Random.Range(
+                0,
+                skyboxMaterials.Length
+            );
         }
         while (nextIndex == currentSkyboxIndex);
 
-        // 新しいインデックスを保存して、スカイボックスを変更
         currentSkyboxIndex = nextIndex;
         ChangeSkybox(currentSkyboxIndex);
     }
@@ -155,60 +212,67 @@ public class RingController : MonoBehaviour
         DynamicGI.UpdateEnvironment();
     }
 
-    // 【追加】対応するSkyboxの音を再生
-    private void PlaySkyboxAudio(int index)
+    // リング通過時の音を再生
+    private void PlayRingPassAudio()
     {
-        if (skyboxAudioSource == null ||
-            skyboxAudioClips == null ||
-            index < 0 ||
-            index >= skyboxAudioClips.Length ||
-            skyboxAudioClips[index] == null)
+        if (ringAudioSource == null)
         {
+            Debug.LogWarning(
+                "Ring Audio Sourceが登録されていません。"
+            );
             return;
         }
 
-        // 前の音が再生中なら停止
-        skyboxAudioSource.Stop();
+        if (ringPassClip == null)
+        {
+            Debug.LogWarning(
+                "Ring Pass Clipが登録されていません。"
+            );
+            return;
+        }
 
-        skyboxAudioSource.clip = skyboxAudioClips[index];
-        skyboxAudioSource.loop = false;
-        skyboxAudioSource.Play();
+        // 前回の停止処理が残っていれば解除
+        if (stopAudioCoroutine != null)
+        {
+            StopCoroutine(stopAudioCoroutine);
+            stopAudioCoroutine = null;
+        }
 
-        // 約3秒後に停止する
-        StartCoroutine(
-            StopSkyboxAudioAfterSeconds(
-                skyboxAudioClips[index],
-                skyboxAudioDuration
-            )
+        // 前の音を停止して最初から再生
+        ringAudioSource.Stop();
+        ringAudioSource.clip = ringPassClip;
+        ringAudioSource.loop = false;
+        ringAudioSource.Play();
+
+        // 指定秒数後に停止
+        stopAudioCoroutine = StartCoroutine(
+            StopRingAudioAfterSeconds(ringAudioDuration)
         );
     }
 
-    // 【追加】指定時間後に音を停止
-    private IEnumerator StopSkyboxAudioAfterSeconds(
-        AudioClip playingClip,
+    private IEnumerator StopRingAudioAfterSeconds(
         float seconds
     )
     {
         yield return new WaitForSeconds(seconds);
 
-        // その間に別のSkybox音へ変わっていない場合だけ停止
-        if (skyboxAudioSource != null &&
-            skyboxAudioSource.clip == playingClip)
+        if (ringAudioSource != null)
         {
-            skyboxAudioSource.Stop();
+            ringAudioSource.Stop();
         }
+
+        stopAudioCoroutine = null;
     }
 
     private void ResetRing()
     {
-        Destroy(currentRing);
-        SpawnRing();
-    }
+        if (currentRing != null)
+        {
+            Destroy(currentRing);
+            currentRing = null;
+        }
 
-    // 2. 1回だけ再生する（SE向け：重なり可能）
-    public void PlayOneShot()
-    {
-        // loop設定に関係なく1回だけ再生
-        audioSource.PlayOneShot(oneShotClip, 1f);
+        // 失敗時はSkyboxを変更せず、次のリングを生成
+        SpawnRing();
     }
 }

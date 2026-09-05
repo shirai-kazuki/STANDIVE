@@ -22660,17 +22660,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   - {fileID: 2100000, guid: a08eb8b0e2fc6f1418c609272923c08c, type: 2}
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
-  skyboxAudioClips:
-  - {fileID: 8300000, guid: ae0f4cfb21cf80d43a37a17ef8e14df0, type: 3}
-  - {fileID: 8300000, guid: 2655ed5e530c4b04e865ddce8a57d577, type: 3}
-  - {fileID: 8300000, guid: 8f48ff0587094a24b852647b6250c3b8, type: 3}
-  - {fileID: 8300000, guid: 4edd7dfff53dda340ad1fccb031cd875, type: 3}
-  - {fileID: 8300000, guid: 2347b14908329f540b4dc50948ccda78, type: 3}
-  - {fileID: 8300000, guid: 3f8c18c5fc29f5445bfdbbdb438a2443, type: 3}
-  skyboxAudioSource: {fileID: 1836464923}
-  skyboxAudioDuration: 3
-  audioSource: {fileID: 1836464923}
-  oneShotClip: {fileID: 8300000, guid: 34976b4066cc6b846bcbb29214f5bde6, type: 3}
+  ringPassClip: {fileID: 8300000, guid: 685b1ddfaea77a94f80a00f8639dc134, type: 3}
+  ringAudioSource: {fileID: 1836464923}
+  ringAudioDuration: 3
   playermanager: {fileID: 1166901039}
 --- !u!114 &1166901046
 MonoBehaviour:
