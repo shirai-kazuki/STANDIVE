@@ -22700,24 +22700,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RingController
   ringPrefab: {fileID: 7054220900034721147, guid: d7f9e14377815f64a91eb9ef3ea6657c, type: 3}
-  spawnDistance: 500
+  spawnDistance: 520
   skyboxMaterials:
   - {fileID: 2100000, guid: 3e5399bd195de7649b874f58c1b9f8a3, type: 2}
   - {fileID: 2100000, guid: f9bfa414ef7c4cb42b22186caed87cc9, type: 2}
-  - {fileID: 2100000, guid: 84a361286e05e3d47acc724aac61d01e, type: 2}
   - {fileID: 2100000, guid: daf83db099266224eaa827bd909d9916, type: 2}
+  - {fileID: 2100000, guid: 84a361286e05e3d47acc724aac61d01e, type: 2}
   - {fileID: 2100000, guid: 4cc187f1b7e997943b96337f545ba4ff, type: 2}
+  - {fileID: 2100000, guid: 34faa4566c3148744bab3a82ab58a887, type: 2}
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   - {fileID: 2100000, guid: a08eb8b0e2fc6f1418c609272923c08c, type: 2}
-  - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   ringPassClip: {fileID: 8300000, guid: 901a150c7a9ca7c43b2bbfa51248695d, type: 3}
   ringAudioSource: {fileID: 1836464923}
   ringAudioDuration: 3
   playermanager: {fileID: 1166901039}
   accelerationBlurVolume: {fileID: 420548659}
-  blurFadeInTime: 0.15
-  blurHoldTime: 0.2
-  blurFadeOutTime: 0.65
+  blurFadeInTime: 0.1
+  blurHoldTime: 0.05
+  blurFadeOutTime: 0.2
+  nextRingDelay: 4
 --- !u!114 &1166901046
 MonoBehaviour:
   m_ObjectHideFlags: 0

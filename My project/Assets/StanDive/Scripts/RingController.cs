@@ -9,7 +9,7 @@ public class RingController : MonoBehaviour
     private GameObject ringPrefab;
 
     [SerializeField]
-    private float spawnDistance = 578.0f;
+    private float spawnDistance = 600.0f;
 
     [Header("Skybox設定")]
     [Tooltip("最初の景色から順番にSkyboxマテリアルを登録します")]
