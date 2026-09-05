@@ -13,7 +13,7 @@ public class Foot : MonoBehaviour
 
     void Start()
     {
-        sp = new SerialPort("COM4", 115200);
+        sp = new SerialPort("COM5", 115200);
         sp.Open();
     }
 
