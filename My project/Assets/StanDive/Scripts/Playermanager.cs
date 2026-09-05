@@ -42,6 +42,7 @@ public class Playermanager : MonoBehaviour
     private int lastMoveDirection = 0;//0が左右移動無し、1が右、-1が左
     public bool parachuteOpen = false;//パラシュートのトリガーが押されたかどうか
     public bool startTrigger = false;//飛び降りのトリガー
+    private float paraChange = 0f;
 
     private bool A = true;
     private bool B = true;
@@ -228,15 +229,16 @@ public class Playermanager : MonoBehaviour
             targetVelocityZ = 0f; // 着地
         }
 
-        if (transform.position.y < 630f && isParachute)
+        if (transform.position.y < 630f && transform.position.y > 100f && isParachute)
         {
             if (A)
             {
                 ringController.ChangePSkybox();
+                paraChange = transform.position.y;
                 A = false;
             }
         }
-        if (transform.position.y < 450f && isParachute)
+        if (transform.position.y < paraChange - 150f && transform.position.y > 100f && isParachute)
         {
             if (B)
             {
@@ -244,7 +246,7 @@ public class Playermanager : MonoBehaviour
                 B = false;
             }
         }
-        if (transform.position.y < 300f && isParachute)
+        if (transform.position.y < paraChange - 300f && transform.position.y > 100f && isParachute)
         {
             if (C)
             {
@@ -252,7 +254,7 @@ public class Playermanager : MonoBehaviour
                 C = false;
             }
         }
-        if (transform.position.y < 150f && isParachute)
+        if (transform.position.y < paraChange - 450f && transform.position.y > 100f && isParachute)
         {
             if (D)
             {
