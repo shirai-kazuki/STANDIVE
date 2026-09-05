@@ -41,6 +41,9 @@ public class RingController : MonoBehaviour
     [SerializeField] private float blurHoldTime = 0.2f;
     [SerializeField] private float blurFadeOutTime = 0.65f;
 
+    [Header("次のリング出現までの待ち時間")]
+    [SerializeField] private float nextRingDelay = 4.0f;
+
     private Coroutine blurCoroutine;
 
     private GameObject currentRing;
@@ -151,16 +154,26 @@ public class RingController : MonoBehaviour
         // リング通過時のみ共通の音を再生
         PlayRingPassAudio();
 
+        // 加速ぼかし
         PlayAccelerationBlur();
 
         // くぐったリングを削除
         Destroy(other.gameObject);
         currentRing = null;
 
-        // 次のリングを生成
-        SpawnRing();
+        // 4秒後に次のリングを生成
+        StartCoroutine(SpawnNextRingAfterDelay());
+    }
 
+    private IEnumerator SpawnNextRingAfterDelay()
+    {
+        yield return new WaitForSeconds(nextRingDelay);
 
+        if (playermanager != null &&
+            !playermanager.GetIsParachute())
+        {
+            SpawnRing();
+        }
     }
 
     private void ChangeToNextSkybox()
