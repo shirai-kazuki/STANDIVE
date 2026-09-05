@@ -6683,6 +6683,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2ea7779ff7781e147a3b6a69396a2706, type: 3}
   m_PrefabInstance: {fileID: 382067722}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &420548658
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 420548660}
+  - component: {fileID: 420548659}
+  m_Layer: 0
+  m_Name: Acceleration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &420548659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420548658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 10
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: adda5faa4ed755d40a52929eff3c8ba9, type: 2}
+--- !u!4 &420548660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420548658}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.09814453, y: -26.418213, z: 15.290527}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &420757874
 GameObject:
   m_ObjectHideFlags: 0
@@ -8411,7 +8460,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -22509,6 +22558,7 @@ MonoBehaviour:
   oneShotClip_1: {fileID: 8300000, guid: 75772b87025bdce47adefe9bd52a8caa, type: 3}
   oneShotClip_2: {fileID: 8300000, guid: 3e11bfadb7f75704ab3b4750ad5e0d1f, type: 3}
   nPCOrientationHandler: {fileID: 1166901046}
+  cloud: {fileID: 2143352014}
   parachuteOpen: 0
   startTrigger: 0
 --- !u!54 &1166901040
@@ -22660,18 +22710,14 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
   - {fileID: 2100000, guid: a08eb8b0e2fc6f1418c609272923c08c, type: 2}
   - {fileID: 2100000, guid: 5b1f1663557b78846834555153cb0ecb, type: 2}
-  skyboxAudioClips:
-  - {fileID: 8300000, guid: ae0f4cfb21cf80d43a37a17ef8e14df0, type: 3}
-  - {fileID: 8300000, guid: 2655ed5e530c4b04e865ddce8a57d577, type: 3}
-  - {fileID: 8300000, guid: 8f48ff0587094a24b852647b6250c3b8, type: 3}
-  - {fileID: 8300000, guid: 4edd7dfff53dda340ad1fccb031cd875, type: 3}
-  - {fileID: 8300000, guid: 2347b14908329f540b4dc50948ccda78, type: 3}
-  - {fileID: 8300000, guid: 3f8c18c5fc29f5445bfdbbdb438a2443, type: 3}
-  skyboxAudioSource: {fileID: 1836464923}
-  skyboxAudioDuration: 3
-  audioSource: {fileID: 1836464923}
-  oneShotClip: {fileID: 8300000, guid: 34976b4066cc6b846bcbb29214f5bde6, type: 3}
+  ringPassClip: {fileID: 8300000, guid: 901a150c7a9ca7c43b2bbfa51248695d, type: 3}
+  ringAudioSource: {fileID: 1836464923}
+  ringAudioDuration: 3
   playermanager: {fileID: 1166901039}
+  accelerationBlurVolume: {fileID: 420548659}
+  blurFadeInTime: 0.15
+  blurHoldTime: 0.2
+  blurFadeOutTime: 0.65
 --- !u!114 &1166901046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53401,3 +53447,4 @@ SceneRoots:
   - {fileID: 509135209}
   - {fileID: 1686451313}
   - {fileID: 299204262}
+  - {fileID: 420548660}
