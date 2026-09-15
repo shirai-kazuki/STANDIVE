@@ -35,23 +35,6 @@ public class Hardware : MonoBehaviour
     //送風機
     private int sendValue = 94;
 
-    //加圧か排気か（false:加圧　true:排気）
-    private bool relay1Off;
-    private bool relay2Off;
-    private bool relay3Off;
-    private bool relay4Off;
-    //false:排気　true:Stop
-    private bool relay7Off;
-
-    //エアバック動作させる=true
-    private bool AirMove;
-
-    //飛び出し加圧max時間
-    private float AirTimeLimit = 1.1f;
-
-    //パラシュート後、AirMoveを禁止する
-    private bool airMoveLocked = false;
-
     // パラシュートを開ける高度に到達したか
     public bool parachuteOK = false;
 
@@ -106,37 +89,14 @@ public class Hardware : MonoBehaviour
                 paratyakutiRoutine = null;
             }
 
-            // エアバッグ停止
-            for (int i = 1; i <= 4; i++)
-            {
-                SendCommand(i + "_Off");
-            }
-
-            // 7番も停止
-            SendCommand("7_On");
-
-            // 状態をリセット
-            relay1Off = true;
-            relay2Off = true;
-            relay3Off = true;
-            relay4Off = true;
-            relay7Off = false;
-
-            AirMove = false;
-
             SendCommand("AB_Stop");
             SendCommand("C_Stop");
+            SendCommand("X");
         }
 
         if (Keyboard.current.dKey.wasPressedThisFrame)
         {
             SendCommand("AB_Down");
-        }
-
-        //パラシュート後はAirMoveを絶対にfalseにする
-        if (airMoveLocked)
-        {
-            AirMove = false;
         }
 
     }
@@ -157,7 +117,6 @@ public class Hardware : MonoBehaviour
     {
         if (!Finish) return;
         CancelAutoMove();
-        AirMove = true;
         currentRoutine = StartCoroutine(MoveToStop("AB_Up", startMove, 0, 0));
         //送信コマンド,アクチュエーター動作リミット時間,動作時間用ステータス,圧力用ステータス
         startOk = false;
@@ -285,57 +244,17 @@ public class Hardware : MonoBehaviour
         currentTimer = 0f;
         float sendTimer = 0f;
 
-        //圧力制御が終了したか
-        bool pressureFinished = false;
-
         //飛び出し時
-        if (nowState == 0 && AirMove)
+        if (nowState == 0)
         {
             //送風機
             SendCommand("W");
-
-            relay1Off = false;
-            relay2Off = false;
-            relay3Off = false;
-            relay4Off = false;
-
-            //コマンド送信
-            SendCommand("7_Off");
-            relay7Off = true;
-
-            for (int i = 1; i <= 4; i++)
-            {
-                SendCommand(i + "_On");
-            }
         }
 
         //傾き
-        if ((nowState == 1 || nowState == 2) && AirMove)
+        if ((nowState == 1 || nowState == 2))
         {
 
-        }
-
-        //パラシュート
-        if (nowState == 3 && AirMove)
-        {
-            relay1Off = true;//排気
-            relay2Off = true;
-            relay3Off = true;
-            relay4Off = true;
-
-            //コマンド送信
-            SendCommand("7_On");
-            relay7Off = false;//排気
-
-            for (int i = 1; i <= 4; i++)
-            {
-                SendCommand(i + "_Off");
-            }
-
-            // AirMoveを強制的にOFF
-            AirMove = false;
-            //以降AirMoveを禁止
-            airMoveLocked = true;
         }
 
         while (currentTimer < timeLimit)
@@ -373,47 +292,6 @@ public class Hardware : MonoBehaviour
                 }
             }
 
-
-            //飛び出し
-            if (AirMove)
-            {
-                if (nowState == 0 && !pressureFinished)
-                {
-                    if (currentTimer < AirTimeLimit)
-                    {
-
-                    }
-                    else
-                    {
-                        //AirTimeLimit経過後
-                        if (!relay1Off)
-                        {
-                            SendCommand("1_Off");
-                            relay1Off = true;
-                        }
-
-                        if (!relay2Off)
-                        {
-                            SendCommand("2_Off");
-                            relay2Off = true;
-                        }
-
-                        if (!relay3Off)
-                        {
-                            SendCommand("3_Off");
-                            relay3Off = true;
-                        }
-
-                        if (!relay4Off)
-                        {
-                            SendCommand("4_Off");
-                            relay4Off = true;
-                        }
-                        pressureFinished = true;
-                    }
-                }
-            }
-
             yield return null;
         }
 
@@ -422,12 +300,10 @@ public class Hardware : MonoBehaviour
             if(nowState == 3)
             {
                 SendCommand("V");
-                Debug.Log("A");
             }
             else if (nowState == 4)
             {
                 SendCommand("X");
-                Debug.Log("B");
             }
 
             currentTimer = 0f;

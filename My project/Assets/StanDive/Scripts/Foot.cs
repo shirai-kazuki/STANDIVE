@@ -5,12 +5,6 @@ public class Foot : MonoBehaviour
 {
     private SerialPort sp;
 
-    // Vp4 状態
-    private bool vp4On = false;
-
-    // HAPTIC REACTOR 状態
-    private bool hapticOn = false;
-
     void Start()
     {
         sp = new SerialPort("COM5", 115200);
@@ -24,8 +18,6 @@ public class Foot : MonoBehaviour
 
     public void startFoot()
     {
-        vp4On = true;
-        hapticOn = true;
 
         SendCommand("BackOn");
         SendCommand("HapticOn");
@@ -33,8 +25,6 @@ public class Foot : MonoBehaviour
 
     public void stopFoot()
     {
-        vp4On = false;
-        hapticOn = false;
 
         SendCommand("BackOff");
         SendCommand("HapticOff");
