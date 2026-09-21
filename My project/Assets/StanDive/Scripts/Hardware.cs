@@ -144,13 +144,6 @@ public class Hardware : MonoBehaviour
         currentRoutine = StartCoroutine(MoveToStop("A_Up_B_Down", limit, -1, 1));
     }
 
-    // アクチュエータ停止
-    public void StopActuator()
-    {
-        CancelAutoMove();
-        SendCommand("AB_Stop");
-    }
-
     //パラシュート
     public void MoveParachute()
     {
