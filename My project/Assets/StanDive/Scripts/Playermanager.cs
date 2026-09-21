@@ -195,6 +195,13 @@ public class Playermanager : MonoBehaviour
         if (heightDifference < 0.03f)
         {
             nPCOrientationHandler.SetIsRightLeft(false, false);
+
+            // 手の高さがほぼ同じになったらアクチュエータ停止
+            if (hardware != null && lastMoveDirection != 0)
+            {
+                hardware.StopActuator();
+                lastMoveDirection = 0;
+            }
         }
 
         // 手の高さに差があり、かつ計算された速度が正常な時だけ安全に力を加える
